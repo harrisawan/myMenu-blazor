@@ -1,0 +1,10 @@
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\bin\Debug\netstandard2.1\appsettings.json
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\bin\Debug\netstandard2.1\MyMenu.Shared.deps.json
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\bin\Debug\netstandard2.1\MyMenu.Shared.dll
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\bin\Debug\netstandard2.1\MyMenu.Shared.pdb
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.csprojAssemblyReference.cache
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.AssemblyInfoInputs.cache
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.AssemblyInfo.cs
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.csproj.CoreCompileInputs.cache
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.dll
+C:\Users\Saeed\source\repos\MyMenu\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.pdb
