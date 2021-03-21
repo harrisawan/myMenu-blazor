@@ -1,0 +1,129 @@
+﻿@page "/register"
+<link href="css/responsive-full-background-image.css" rel="stylesheet" />
+<div class="container">
+    <div class="content">
+
+        <div Class="d-flex justify-space-between py-2 px-1 mt-6" Elevation="0">
+            <div class="" mx-2" Elevation="0"></div>
+            @*<MudPaper Class="mx-2" Elevation="0"></MudPaper>*@
+            <MudPaper Class="px-2 d-flex mx-2 mud-elevation-14">
+                @*<div class="d-none d-sm-flex">
+                        <img src="images/photo1.jpg" style="width:100%;height:auto;" />
+                    </div>*@
+                <div style="max-width: 400px;">
+                    <MudCard Elevation="0" Class="py-2">
+                        <MudCardContent>
+                            <MudText Typo="Typo.h5" Align="Align.Center"><b>Create Account</b></MudText>
+                            @foreach (var error in errors)
+                            {
+                                <MudAlert Severity="Severity.Error" NoIcon="false">@error</MudAlert>
+                            }
+
+                            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                                <MudTextField T="string" Label="Username" Required="true" RequiredError="User name is required!" />
+                                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                                              Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+                                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                                              InputType="InputType.Password"
+                                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                                              RequiredError="Password is required!" />
+                                <MudTextField T="string"
+                                              Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
+                                              Validation="@(new Func<string, string>(PasswordMatch))" />
+                                <MudCheckBox T="bool" Required="true" RequiredError="You must agree the Terms & Policies" Class="ml-n2" Color="Color.Primary">
+                                    I accept the <MudLink Href="#" Underline="Underline.Always">Terms of Use</MudLink> & <MudLink Href="#" Underline="Underline.Always">Privacy Policy</MudLink>
+
+                                </MudCheckBox>
+                            </MudForm>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                        </MudCardActions>
+                        <MudText Align="Align.Center" Class="pb-2 pt-1"> Already have an Account <MudLink Href="/login" Underline="Underline.Always"><b>Login</b></MudLink></MudText>
+
+                    </MudCard>
+                    @*<MudPaper Class="d-flex d-block d-block-md justify-center py-2 mt-2" Elevation="0">
+                            <MudPaper Class="pa-1 mx-1" Elevation="0">
+                                <MudButton Link="#"
+                                           Target="_blank"
+                                           Variant="Variant.Outlined"
+                                           EndIcon="@Icons.Custom.Brands.Facebook"
+                                           Color="Color.Primary">
+                                    Facebook
+                                </MudButton>
+                            </MudPaper>
+                            <MudPaper Class="pa-1 mx-1" Elevation="0">
+                                <MudButton Link="#"
+                                           Target="_blank"
+                                           Variant="Variant.Outlined"
+                                           EndIcon="@Icons.Custom.Brands.Google"
+                                           Color="Color.Error">
+                                    Google
+                                </MudButton>
+                            </MudPaper>
+                            <MudPaper Class="pa-1 mx-1" Elevation="0">
+                                <MudButton Link="#"
+                                           Target="_blank"
+                                           Variant="Variant.Outlined"
+                                           EndIcon="@Icons.Custom.Brands.Twitter"
+                                           Color="Color.Info">
+                                    Twitter
+                                </MudButton>
+                            </MudPaper>
+                        </MudPaper>*@
+                    <!--<MudPaper Class="pa-2 justify-center my-4 mud-text-align-center" Elevation="0">-->
+                    @*<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>form.Validate())">Validate</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@(()=>form.Reset())" Class="mx-2">Reset</MudButton>
+                        <MudButton Variant="Variant.Filled" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>*@
+                    <!--</MudPaper>-->
+                    @*<MudExpansionPanels>
+                            <MudExpansionPanel Text="@($"Show Errors ({errors.Length})")">
+                                @foreach (var error in errors)
+                                {
+                                    <MudText Color="@Color.Error">@error</MudText>
+                                }
+                            </MudExpansionPanel>
+                        </MudExpansionPanels>*@
+
+                </div>
+
+            </MudPaper>
+            <div class="" mx-2" Elevation="0"></div>
+            @*<MudPaper Class="mx-2" Elevation="0"></MudPaper>*@
+        </div>
+    </div>
+</div>
+
+@code {
+
+
+    bool success;
+    string[] errors = { };
+    MudTextField<string> pwField1;
+    MudForm form;
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+
+    private string PasswordMatch(string arg)
+    {
+        if (pwField1.Value != arg)
+            return "Passwords don't match";
+        return null;
+    }
+
+}

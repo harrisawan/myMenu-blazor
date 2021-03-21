@@ -6615,20 +6615,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Saeed\\.nuget\\packages\\": {}
+    "C:\\Users\\haris\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Server\\MyMenu.Server.csproj",
+      "projectUniqueName": "D:\\new project\\MyMenu\\Server\\MyMenu.Server.csproj",
       "projectName": "MyMenu.Server",
-      "projectPath": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Server\\MyMenu.Server.csproj",
-      "packagesPath": "C:\\Users\\Saeed\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Server\\obj\\",
+      "projectPath": "D:\\new project\\MyMenu\\Server\\MyMenu.Server.csproj",
+      "packagesPath": "C:\\Users\\haris\\.nuget\\packages\\",
+      "outputPath": "D:\\new project\\MyMenu\\Server\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Saeed\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\haris\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -6639,12 +6644,13 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Client\\MyMenu.Client.csproj": {
-              "projectPath": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Client\\MyMenu.Client.csproj"
+            "D:\\new project\\MyMenu\\Client\\MyMenu.Client.csproj": {
+              "projectPath": "D:\\new project\\MyMenu\\Client\\MyMenu.Client.csproj"
             },
-            "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Shared\\MyMenu.Shared.csproj": {
-              "projectPath": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Shared\\MyMenu.Shared.csproj"
+            "D:\\new project\\MyMenu\\Shared\\MyMenu.Shared.csproj": {
+              "projectPath": "D:\\new project\\MyMenu\\Shared\\MyMenu.Shared.csproj"
             }
           }
         }
@@ -6657,6 +6663,7 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "Microsoft.AspNetCore.Components.WebAssembly.Server": {
             "target": "Package",
@@ -6705,7 +6712,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

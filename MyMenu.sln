@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMenu.Server", "MyMenu\Server\MyMenu.Server.csproj", "{BDB6B5A3-DE36-4B2C-A457-C6AD0CDE4354}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMenu.Server", "MyMenu\Server\MyMenu.Server.csproj", "{BDB6B5A3-DE36-4B2C-A457-C6AD0CDE4354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMenu.Client", "MyMenu\Client\MyMenu.Client.csproj", "{E449A188-8ECB-4705-A8D7-08C19EEBC101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMenu.Client", "MyMenu\Client\MyMenu.Client.csproj", "{E449A188-8ECB-4705-A8D7-08C19EEBC101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMenu.Shared", "MyMenu\Shared\MyMenu.Shared.csproj", "{32E0663F-CADF-42FB-A5E9-B15B16F8A448}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMenu.Shared", "MyMenu\Shared\MyMenu.Shared.csproj", "{32E0663F-CADF-42FB-A5E9-B15B16F8A448}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

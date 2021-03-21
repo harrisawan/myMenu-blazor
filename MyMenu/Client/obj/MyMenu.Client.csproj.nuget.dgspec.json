@@ -1,21 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Client\\MyMenu.Client.csproj": {}
+    "D:\\new project\\MyMenu\\Client\\MyMenu.Client.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Client\\MyMenu.Client.csproj": {
+    "D:\\new project\\MyMenu\\Client\\MyMenu.Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Client\\MyMenu.Client.csproj",
+        "projectUniqueName": "D:\\new project\\MyMenu\\Client\\MyMenu.Client.csproj",
         "projectName": "MyMenu.Client",
-        "projectPath": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Client\\MyMenu.Client.csproj",
-        "packagesPath": "C:\\Users\\Saeed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Saeed\\source\\repos\\MyMenu\\myMenu-blazor\\MyMenu\\Client\\obj\\",
+        "projectPath": "D:\\new project\\MyMenu\\Client\\MyMenu.Client.csproj",
+        "packagesPath": "C:\\Users\\haris\\.nuget\\packages\\",
+        "outputPath": "D:\\new project\\MyMenu\\Client\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Saeed\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\haris\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.1"
@@ -26,6 +30,7 @@
         },
         "frameworks": {
           "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
             "projectReferences": {}
           }
         },
@@ -37,6 +42,7 @@
       },
       "frameworks": {
         "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
           "dependencies": {
             "Microsoft.AspNetCore.Components.WebAssembly": {
               "target": "Package",
@@ -76,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }

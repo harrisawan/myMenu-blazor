@@ -6,7 +6,7 @@
   "linkerEnabled": false,
   "resources": {
     "assembly": {
-      "MyMenu.Client.dll": "sha256-YgvzbtRKwqKg8UDcjpcKb5n+JMM70QjYw6UN6rX6Bow=",
+      "MyMenu.Client.dll": "sha256-aLpDH+ucKj7b6gR6fmii6JeFAR1xZQwBNetPGUgtYCw=",
       "Microsoft.Extensions.DependencyInjection.Abstractions.dll": "sha256-t9RWyCvJkH08tKwurNv3EzfASF5PNJMAWCJG85bdHnc=",
       "netstandard.dll": "sha256-\/zcPVM75OAY+joGVM8yIC1gO1SFYWP1CFERgQ8PJkfA=",
       "System.Xml.Linq.dll": "sha256-IPbQMdJxZXdk8HTlaPyXdQ6Zb82iZLphnM74yO4EURQ=",
@@ -30,12 +30,12 @@
       "System.Drawing.Common.dll": "sha256-vcCLMX4xAsUqKuQjjIkzu1O9pHGO\/tdvysgSmEjL6oo=",
       "System.Data.DataSetExtensions.dll": "sha256-eejp4oI3sQBq\/tI6GsJNaPu3Dkdot5Vbn8+R3w2vYLE=",
       "System.Data.dll": "sha256-dxfTuT6ffPMmvuUUTfv7+bpLtOZZZHQdz77hjhy9qHw=",
+      "System.ComponentModel.Annotations.dll": "sha256-tmnkCmP9OzLUkpQ3LP7PRosi7gt5pyfEZCM6aqAokFI=",
+      "System.ComponentModel.DataAnnotations.dll": "sha256-LIfCYwg+PHltTK4z3EnbSkA7m2cn8JS4jHVthdKrDF8=",
       "MudBlazor.dll": "sha256-tz+mbrfMAgQ25cZ7NXKHKlnWewN7s91YPcC0azOPtBI=",
       "Microsoft.Extensions.Options.dll": "sha256-PXFFeWQDF2EufmghmkU9yCINy+4ke1MuzO3ll8B\/r3o=",
       "Microsoft.Extensions.Primitives.dll": "sha256-fN9Y7HQdlqTC9a39SmaiH+QzxM+hsco\/\/u+5pD2ly5g=",
       "System.Runtime.CompilerServices.Unsafe.dll": "sha256-kL\/omZDwqByAi+lPdMeDmr3XjHcn4RVb+LmZ4mut1Yc=",
-      "System.ComponentModel.Annotations.dll": "sha256-tmnkCmP9OzLUkpQ3LP7PRosi7gt5pyfEZCM6aqAokFI=",
-      "System.ComponentModel.DataAnnotations.dll": "sha256-LIfCYwg+PHltTK4z3EnbSkA7m2cn8JS4jHVthdKrDF8=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-KRiriXsj76llgdCgiox2acUx5JSbiDHeOEfyXV6XQs8=",
       "Microsoft.AspNetCore.Components.dll": "sha256-BcoQTkDUdYHwQBb2Bll4Q9nO4+aB8LzAq8SBGUFZKSw=",
       "System.Buffers.dll": "sha256-ZxXy75PYbzJxNfAc\/SAP1nUYm4gt1jSaOpFnBb9m85M=",
@@ -60,7 +60,7 @@
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-czNf3btAeBW\/vvID5LAfgcsNZ+GM3ssVuPaMflcg0rs="
     },
     "pdb": {
-      "MyMenu.Client.pdb": "sha256-ro4DqddUWfg\/UtjjkIBae4UYuQJ5XUkqrvKnqn4SN0c="
+      "MyMenu.Client.pdb": "sha256-83a081+YHXhH1GC\/rNRyqJx4gU6KSrQ89YjVYMvLu2U="
     },
     "runtime": {
       "dotnet.3.2.0.js": "sha256-mPoqx7XczFHBWk3gRNn0hc9ekG1OvkKY4XiKRY5Mj5U=",
