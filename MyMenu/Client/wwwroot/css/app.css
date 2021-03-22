@@ -13,7 +13,17 @@ a, .btn-link {
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
+/* Haris inserion Start*/
+.priceCard {
+    width: 270px;
+}
 
+@media only screen and (max-width: 959px) {
+    .priceCard {
+        width: auto;
+    }
+}
+/* Haris inserion End*/
 app {
     position: relative;
     display: flex;

@@ -4,7 +4,7 @@
 #pragma warning disable 0649
 #pragma warning disable 0169
 
-namespace MyMenu.Client.Shared
+namespace MyMenu.Client.Pages
 {
     #line hidden
     using System;
@@ -96,25 +96,14 @@ using System.ComponentModel.DataAnnotations;
 #line default
 #line hidden
 #nullable disable
-    public partial class MainLayout : LayoutComponentBase
+    [Microsoft.AspNetCore.Components.RouteAttribute("/contact")]
+    public partial class Contact : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998
-#nullable restore
-#line 26 "D:\new project\MyMenu\Client\Shared\MainLayout.razor"
-        bool _drawerOpen = true;
-
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    } 
-
-#line default
-#line hidden
-#nullable disable
     }
 }
 #pragma warning restore 1591

@@ -1,0 +1,123 @@
+﻿@page "/pricepackage"
+
+<div Class="d-flex justify-center py-2 px-1 mt-9">
+    <MudText Align="Align.Center" Typo="Typo.h3">
+        <b>
+            Pricing
+        </b>
+    </MudText>
+</div>
+
+<div Class="d-flex justify-center py-2 px-1 mt-1">
+    <div Class="pa-2 mx-2"></div>
+    <MudPaper Class="pa-2 mx-2" Elevation="0">
+        <MudText Align="Align.Center" Typo="Typo.h5">
+            <b>
+                CHOOSE THE PACKAGE
+                THAT’S RIGHT FOR YOUR BUSINESS
+            </b>
+        </MudText>
+    </MudPaper>
+    <div Class="pa-2 mx-2"></div>
+</div>
+<div Class="d-flex justify-space-between align-center py-2 px-1 mt-2" Elevation="0">
+    <div class="mx-2" Elevation="0"></div>
+    <div class="mx-2" Elevation="0">
+        <MudGrid>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Class="mx-2" Elevation="0">
+                    <MudCard Class="priceCard">
+                        <MudCardHeader Style="background-color: #4CAF50;color: white">
+                            <CardHeaderContent>
+                                <MudText Align="Align.Center" Typo="Typo.h5"><b>Free</b></MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudText Align="Align.Center" Typo="Typo.h5">7 Days Trial</MudText>
+                            <MudDivider Class="mt-4 mb-2" />
+                            <MudList Clickable="false">
+                                <MudListItem Text="Feature 1" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 2" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 3" Icon="@Icons.Material.Filled.Clear" IconColor="Color.Error" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 4" Icon="@Icons.Material.Filled.Clear" IconColor="Color.Error" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 5" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                            </MudList>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Style="color: #4CAF50;">Get Started</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Class="mx-2" Elevation="0">
+                    <MudCard Class="priceCard">
+                        <MudCardHeader Class="mud-theme-info">
+                            <CardHeaderContent>
+                                <MudText Align="Align.Center" Typo="Typo.h5"><b>Standard</b></MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudText Align="Align.Center" Typo="Typo.h5">$ 24.99 / year</MudText>
+                            <MudDivider Class="mt-4 mb-2" />
+                            <MudList Clickable="false">
+                                <MudListItem Text="Feature 1" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 2" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 3" Icon="@Icons.Material.Filled.Clear" IconColor="Color.Error" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 4" Icon="@Icons.Material.Filled.Clear" IconColor="Color.Error" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 5" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                            </MudList>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Variant="Variant.Text" Color="Color.Info">Get Started</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Class="mx-2" Elevation="0">
+                    <MudCard Class="priceCard">
+                        <MudCardHeader Style="background-color:#E91E63;color:white">
+                            <CardHeaderContent>
+                                <MudText Align="Align.Center" Typo="Typo.h5"><b>Premium</b></MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudText Align="Align.Center" Typo="Typo.h5">$ 49.99 / year</MudText>
+                            <MudDivider Class="mt-4 mb-2" />
+                            <MudList Clickable="false">
+                                <MudListItem Text="Feature 1" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 2" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 3" Icon="@Icons.Material.Filled.Clear" IconColor="Color.Error" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 4" Icon="@Icons.Material.Filled.Clear" IconColor="Color.Error" />
+                                <MudDivider />
+                                <MudListItem Text="Feature 5" Icon="@Icons.Material.Filled.Check" IconColor="Color.Success" />
+                                <MudDivider />
+                            </MudList>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Variant="Variant.Text" Color="Color.Secondary">Get Started</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </div>
+    <div class="mx-2" Elevation="0"></div>
+</div>
+@code {
+
+}

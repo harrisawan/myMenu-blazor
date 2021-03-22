@@ -1,7 +1,54 @@
 ﻿@page "/"
+<style>
+    .container {
+        position: relative;
+        text-align: center;
+        color: white;
+    }
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
-    <MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
-    <MudText Class="mb-8">Welcome to your new app, powerd by MudBlazor!</MudText>
-    <MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<div class="container">
+    <img src="/images/banner.jpg" alt="Snow" style="width:100%;">
+    <div class="centered">
+        <div Class="d-flex justify-center py-2 px-1">
+            <MudText Align="Align.Center" style="font-size:8vw;text-shadow: 2px 2px 4px black;" GutterBottom="true">MyMenu</MudText>
+        </div>
+
+    </div>
+</div>
+<MudContainer Class="mt-9">
+    <MudGrid>
+        <MudItem xs="12" md="6">
+            <div class="d-flex justify-center py-2 px-1 mt-6">
+                <img src="/images/photo4.jpg" />
+            </div>
+
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <div class="d-flex justify-center py-2 px-2 mt-6">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+            </div>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <div class="d-flex justify-center py-2 px-2 mt-6">
+
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+            </div>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <div class="d-flex justify-center py-2 px-1 mt-6">
+                <img src="/images/photo3.jpg" />
+            </div>
+
+        </MudItem>
+    </MudGrid>
+
 </MudContainer>
