@@ -96,6 +96,7 @@ using System.ComponentModel.DataAnnotations;
 #line default
 #line hidden
 #nullable disable
+    [Microsoft.AspNetCore.Components.LayoutAttribute(typeof(LoginLayout))]
     [Microsoft.AspNetCore.Components.RouteAttribute("/register")]
     public partial class Register : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -105,7 +106,7 @@ using System.ComponentModel.DataAnnotations;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 97 "D:\new project\MyMenu\Client\Pages\Register.razor"
+#line 98 "D:\new project\MyMenu\Client\Pages\Register.razor"
        
 
 
