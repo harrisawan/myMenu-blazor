@@ -153,7 +153,6 @@ D:\new project\MyMenu\Client\bin\Debug\netstandard2.1\System.Runtime.CompilerSer
 D:\new project\MyMenu\Client\bin\Debug\netstandard2.1\System.Text.Encodings.Web.dll
 D:\new project\MyMenu\Client\bin\Debug\netstandard2.1\System.Text.Json.dll
 D:\new project\MyMenu\Client\bin\Debug\netstandard2.1\System.Threading.Tasks.Extensions.dll
-D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\MyMenu.Client.csprojAssemblyReference.cache
 D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\MyMenu.Client.AssemblyInfoInputs.cache
 D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\MyMenu.Client.AssemblyInfo.cs
 D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\MyMenu.Client.csproj.CoreCompileInputs.cache
@@ -383,8 +382,7 @@ D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\MyMenu.Client.dll
 D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\MyMenu.Client.pdb
 D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\blazor\serviceworkers\wwwroot\service-worker.js
 D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\blazor\service-worker-assets.js
-D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\Jt1iaeJmse80Ig05hbJMtWCx06_BpuiYHUIxuAzxmjo=.hash
-D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\2-nMztAcggAXizve-BwykXUzUmNvCkCY19hRVMdjl2I=.hash
-D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\pUUZMqaRo9RYAJtWQDB4PIQSnPGN0G-4ehSV6Da5jl0=.hash
-D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\RZqv9M0vNOGCV83yh1yBkVpd0YooaoKioG3lr1DkU8g=.hash
-D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\K8pze3sQWSOQfn6eKO0KP7wWGWQA5JK5LIURKqzcgF4=.hash
+D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\oAQY1ef3q5-xn4NgJ06PLVZgyyfsqa1eIJjFs0KTD90=.hash
+D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\jZc3viKExHP17yISFp_oZ1jvmjLiTMepuefffG_Y4tg=.hash
+D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\4jiTa7sLFOEc3xHaSAlvQujIUEJzN3pbprzzjtodRLU=.hash
+D:\new project\MyMenu\Client\obj\Debug\netstandard2.1\integrity\HWK4dk9DZ5q7Vgkg1MWSGkWsjXSUZt6CoDwd1K3HVUg=.hash
