@@ -250,6 +250,14 @@ C:\Users\Saeed\source\repos\MyMenu\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.
 C:\Users\Saeed\source\repos\MyMenu\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.genruntimeconfig.cache
 C:\Users\Saeed\source\repos\MyMenu\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.csproj.CoreCompileInputs.cache
 C:\Users\Saeed\source\repos\MyMenu\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.MvcApplicationPartsAssemblyInfo.cache
+D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.csprojAssemblyReference.cache
+D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.AssemblyInfoInputs.cache
+D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.AssemblyInfo.cs
+D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.csproj.CoreCompileInputs.cache
+D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.MvcApplicationPartsAssemblyInfo.cache
+D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.RazorAssemblyInfo.cache
+D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.RazorAssemblyInfo.cs
+D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Client.StaticWebAssets.xml
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\appsettings.json
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\BlazorDebugProxy\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
@@ -404,7 +412,6 @@ D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\BlazorDebugProxy\zh-Hans\Mi
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\BlazorDebugProxy\zh-Hans\Microsoft.CodeAnalysis.resources.dll
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\BlazorDebugProxy\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\BlazorDebugProxy\zh-Hant\Microsoft.CodeAnalysis.resources.dll
-D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Client.StaticWebAssets.xml
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Server.StaticWebAssets.xml
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Server.exe
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Server.deps.json
@@ -480,13 +487,6 @@ D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Client.dll
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Shared.dll
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Client.pdb
 D:\new project\MyMenu\Server\bin\Debug\netcoreapp3.1\MyMenu.Shared.pdb
-D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.csprojAssemblyReference.cache
-D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.AssemblyInfoInputs.cache
-D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.AssemblyInfo.cs
-D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.csproj.CoreCompileInputs.cache
-D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.MvcApplicationPartsAssemblyInfo.cache
-D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.RazorAssemblyInfo.cache
-D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\MyMenu.Server.RazorAssemblyInfo.cs
 D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\staticwebassets\MyMenu.Server.StaticWebAssets.Manifest.cache
 D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\staticwebassets\MyMenu.Server.StaticWebAssets.xml
 D:\new project\MyMenu\Server\obj\Debug\netcoreapp3.1\scopedcss\bundle\MyMenu.Server.styles.css

@@ -106,7 +106,7 @@ using System.ComponentModel.DataAnnotations;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 132 "D:\new project\MyMenu\Client\Pages\Menu.razor"
+#line 131 "D:\new project\MyMenu\Client\Pages\Menu.razor"
        
     MudListItem selectedItem;
     MudTabs tabs;

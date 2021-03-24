@@ -97,14 +97,27 @@ using System.ComponentModel.DataAnnotations;
 #line hidden
 #nullable disable
     [Microsoft.AspNetCore.Components.LayoutAttribute(typeof(AdminLayout))]
-    [Microsoft.AspNetCore.Components.RouteAttribute("/adddiscount")]
-    public partial class AddDiscount : Microsoft.AspNetCore.Components.ComponentBase
+    [Microsoft.AspNetCore.Components.RouteAttribute("/newdiscount")]
+    public partial class NewDiscount : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 137 "D:\new project\MyMenu\Client\Pages\NewDiscount.razor"
+       
+    MudTimePicker _picker;
+    MudTimePicker _picker1;
+    MudTimePicker _picker2;
+    MudTimePicker _picker3;
+    string date = DateTime.Now.ToString("yyyy-MM-dd");
+    TimeSpan? time = new TimeSpan(00, 45, 00);
+
+#line default
+#line hidden
+#nullable disable
     }
 }
 #pragma warning restore 1591

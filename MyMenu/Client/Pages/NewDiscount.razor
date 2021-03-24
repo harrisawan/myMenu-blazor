@@ -1,0 +1,144 @@
+﻿@page "/newdiscount"
+@layout AdminLayout
+
+<div class="d-flex justify-center py-2 px-1 mt-9 mb-4">
+    <MudText Align="Align.Center" Typo="Typo.h3" Color="Color.Primary">
+        <b>
+            New Discount
+        </b>
+    </MudText>
+</div>
+<div class="d-flex justify-center py-2 px-1 mt-4">
+    <MudGrid>
+        <MudItem sm="12" md="6">
+            <MudPaper Elevation="4" Class="pa-4">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary"><b>Weakly Discount</b></MudText>
+                        <MudDivider />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Color="Color.Primary">
+                            Monday
+                        </MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Color="Color.Primary">
+                            Tuseday
+                        </MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Color="Color.Primary">
+                            Wednesday
+                        </MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Color="Color.Primary">
+                            Thursday
+                        </MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Color="Color.Primary">
+                            Firday
+                        </MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Color="Color.Primary">
+                            Saturday
+                        </MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Color="Color.Primary">
+                            Sunday
+                        </MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <div class="d-inline"><MudText>From:</MudText></div>
+                        <div class="d-inline">
+                            <MudTimePicker @ref="_picker" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time From">
+                                <PickerActions>
+                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
+                                    <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                                    <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                                </PickerActions>
+                            </MudTimePicker>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <div class="d-inline"><MudText>To:</MudText></div>
+                        <div class="d-inline">
+                            <MudTimePicker @ref="_picker1" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time To">
+                                <PickerActions>
+                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker1.Clear())">Clear</MudButton>
+                                    <MudButton OnClick="@(() => _picker1.Close(false))">Cancel</MudButton>
+                                    <MudButton Color="Color.Primary" OnClick="@(() => _picker1.Close())">Ok</MudButton>
+                                </PickerActions>
+                            </MudTimePicker>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Add Discount</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+        <MudItem sm="12" md="6">
+            <MudPaper Elevation="4" Class="pa-4">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary"><b>Day or Period Discount</b></MudText>
+                        <MudDivider />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <div class="d-inline"><MudText>From:</MudText></div>
+                        <div class="d-inline">
+                            <MudDatePicker MinDate="@DateTime.Parse(date)" PickerVariant="PickerVariant.Dialog" Label="Date From" @bind-Text=@date />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <div class="d-inline"><MudText>To:</MudText></div>
+                        <div class="d-inline">
+                            <MudDatePicker MinDate="@DateTime.Parse(date)" PickerVariant="PickerVariant.Dialog" Label="Date To" Text=@date />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <div class="d-inline"><MudText>From:</MudText></div>
+                        <div class="d-inline">
+                            <MudTimePicker @ref="_picker2" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time From">
+                                <PickerActions>
+                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker2.Clear())">Clear</MudButton>
+                                    <MudButton OnClick="@(() => _picker2.Close(false))">Cancel</MudButton>
+                                    <MudButton Color="Color.Primary" OnClick="@(() => _picker2.Close())">Ok</MudButton>
+                                </PickerActions>
+                            </MudTimePicker>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <div class="d-inline"><MudText>To:</MudText></div>
+                        <div class="d-inline">
+                            <MudTimePicker @ref="_picker3" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time To">
+                                <PickerActions>
+                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker3.Clear())">Clear</MudButton>
+                                    <MudButton OnClick="@(() => _picker3.Close(false))">Cancel</MudButton>
+                                    <MudButton Color="Color.Primary" OnClick="@(() => _picker3.Close())">Ok</MudButton>
+                                </PickerActions>
+                            </MudTimePicker>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Add Discount</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    MudTimePicker _picker;
+    MudTimePicker _picker1;
+    MudTimePicker _picker2;
+    MudTimePicker _picker3;
+    string date = DateTime.Now.ToString("yyyy-MM-dd");
+    TimeSpan? time = new TimeSpan(00, 45, 00);
+}
