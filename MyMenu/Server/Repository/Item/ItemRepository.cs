@@ -17,7 +17,6 @@ namespace MyMenu.Server.Repository.Item
         }
         public async Task<object> AddUpdateItem(ItemViewModel itemViewModel, string UserName)
         {
-
             if (itemViewModel.Id == 0)
             {
                 MyMenu.Shared.Models.Item item = new MyMenu.Shared.Models.Item();

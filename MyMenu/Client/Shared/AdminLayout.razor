@@ -1,0 +1,39 @@
+﻿@inherits LayoutComponentBase
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout>
+    <MudAppBar Elevation="4">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudAppBarSpacer />
+
+        <MudLink Href="#" Class="pa-2 mud-theme-primary">Company Name</MudLink>
+        <MudLink Href="#" Class="pa-2 mud-theme-primary">Logout</MudLink>
+        @*<MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/Garderoben/MudBlazor" Target="_blank" />*@
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="4">
+        <MudDrawerHeader Style="padding-left: 67px;">
+            <div class="d-flex justify-center">
+                <MudAvatar Image="/images/userdefault.png" Style="height:80px; width:80px;" Class="ma-2" />
+            </div>
+        </MudDrawerHeader>
+        <MudNavMenu Class="mud-width-full">
+            <MudDivider Class="my-2" />
+            <MudNavLink Href="/adminHome" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+            <MudNavLink Href="#" Icon="@Icons.Material.Filled.Money">Payments</MudNavLink>
+            <MudNavLink Href="/addcompany" Icon="@Icons.Material.Filled.HomeWork">Company</MudNavLink>
+            <MudNavLink Href="/menu" Icon="@Icons.Material.Filled.RestaurantMenu">Menus</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code { bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    } }

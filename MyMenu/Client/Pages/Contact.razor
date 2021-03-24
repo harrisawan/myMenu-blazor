@@ -1,9 +1,9 @@
 ﻿@page "/contact"
 
 <div Class="d-flex justify-center py-2 px-1 mt-14">
-    <MudText Align="Align.Center" Typo="Typo.h3">
+    <MudText Align="Align.Center" Typo="Typo.h3" Color="Color.Primary">
         <b>
-            Contact Us
+            CONTACT US
             <MudDivider />
         </b>
     </MudText>
@@ -13,38 +13,7 @@
     <div Class="pa-2 mx-2"></div>
     <MudPaper Class="pa-2 mx-2" Elevation="0">
         <MudGrid>
-            <MudItem xs="12" md="6">
-                <div class="d-flex justify-center py-2 px-1 mt-6">
-                    <div style="max-width: 400px;">
-                        @*<EditForm @ref="form" Model="@errors" @bind-IsValid="@success" @bind-Errors="@errors">*@
-                        <MudGrid>
-                            <MudItem xs="12" md="6">
-                                <MudTextField T="string" Label="First Name" Required="true" RequiredError="First Name is required!" />
-                            </MudItem>
-                            <MudItem xs="12" md="6">
-                                <MudTextField T="string" Label="Last Name" Required="true" RequiredError="Last Name is required!" />
-                            </MudItem>
-                            <MudItem xs="12" md="6">
-                                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!" />
-                            </MudItem>
-                            <MudItem xs="12" md="6">
-                                <MudTextField T="string" Label="Phone Number" Required="true" RequiredError="Phone Number is required!" />
-                            </MudItem>
-                            <MudItem xs="12" md="12">
-                                <MudTextField T="string" Label="Enter your Message" Variant="Variant.Text" Lines="5" />
-                            </MudItem>
-                            <MudItem xs="12" md="12">
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Send</MudButton>
-                            </MudItem>
-                        </MudGrid>
-
-
-                        @*</EditForm>*@
-                    </div>
-                </div>
-
-            </MudItem>
-            <MudItem xs="12" md="6">
+            <MudItem xs="12">
                 <div class="d-flex justify-center py-2 px-2 mt-6">
                     <MudList Clickable="false">
                         <MudListSubheader>

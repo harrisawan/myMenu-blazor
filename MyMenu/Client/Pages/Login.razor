@@ -6,11 +6,11 @@
     <div class="content">
         <div Class="d-flex justify-space-between py-2 px-1 mt-6" Elevation="0">
             <div class="" mx-2" Elevation="0"></div>
-            <MudPaper Class="d-flex mx-2 mud-elevation-14">
+            <MudPaper Class="d-flex mx-2 mud-elevation-22">
                 <div id="loginformsize" style="width:380px;">
                     <MudCard Elevation="0" Class="py-2">
                         <MudCardContent>
-                            <MudText Typo="Typo.h5" Align="Align.Center"><b>Login</b></MudText>
+                            <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary"><b>Login</b></MudText>
                             @foreach (var error in errors)
                             {
                                 <MudAlert Severity="Severity.Error" NoIcon="false">@error</MudAlert>
@@ -26,7 +26,7 @@
                             <MudText Align="Align.Right"><MudLink Href="/register" Underline="Underline.Hover">Forgot Password?</MudLink></MudText>
                         </MudCardContent>
                         <MudCardActions>
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mr-3">Login</MudButton>
+                            <MudButton Link="/adminHome" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mr-3">Login</MudButton>
                         </MudCardActions>
                         <MudText Class="px-2 pb-2" Align="Align.Center"> New User? <MudLink Href="/register" Underline="Underline.Always"><b>Create an account</b></MudLink></MudText>
                     </MudCard>

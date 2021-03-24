@@ -1,0 +1,139 @@
+﻿@page "/menu"
+@layout AdminLayout
+<MudTabs Elevation="0" @ref="tabs" Centered="true">
+    <MudTabPanel Style="display: none" Text="Menus">
+        <div class="d-flex justify-center py-2 px-1 mt-4">
+            <MudPaper Class="pa-4" Style="max-width:500px;" Elevation="4">
+                <div Class="py-2 px-1 mt-2">
+                    <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Primary"><b>MENU</b></MudText>
+                    <MudDivider />
+                </div>
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <div>
+                            <div class="d-block pa-2">
+                                <img src="/images/default.png" style="width:80px;height:80px;border:1px solid black;" />
+                            </div>
+                            <div class="d-block py-2 pr-2">
+                                <MudButton HtmlTag="label"
+                                           Variant="Variant.Filled"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Filled.Image"
+                                           for="fileInput">
+                                    Upload image
+                                </MudButton>
+                                <input type="file" id="fileInput" name="fileInput" hidden>
+                            </div>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField T="string" Label="Resturant Name" Required="true" RequiredError="Company Name is required!" />
+                        <MudTextField T="string" Label="Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                    </MudItem>
+                    <MudItem xs="12" md="6"></MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                     Label="Enabled" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => Activate(1)" Class="mt-2">Category</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Add More</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </div>
+
+    </MudTabPanel>
+    <MudTabPanel Style="display: none" Text="Categories">
+        <div class="d-flex justify-center py-2 px-1 mt-4">
+            <MudPaper Class="pa-4" Style="max-width:500px;" Elevation="4">
+                <div Class="py-2 px-1 mt-2">
+                    <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Primary"><b>CATAGORIES</b></MudText>
+                    <MudDivider />
+                </div>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField T="string" Label="Category Name" Required="true" RequiredError="Category Name is required!" />
+                        <MudTextField T="string" Label="Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                     Label="Enabled" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => Activate(2)" Class="mt-2">Items</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Add More</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </div>
+    </MudTabPanel>
+    <MudTabPanel Style="display: none" Text="Items">
+        <div class="d-flex justify-center py-2 px-1 mt-4">
+            <MudPaper Class="pa-4" Style="max-width:500px;" Elevation="4">
+                <div Class="py-2 px-1 mt-2">
+                    <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Primary"><b>ITEMS</b></MudText>
+                    <MudDivider />
+                </div>
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <div>
+                            <div class="d-block pa-2">
+                                <img src="/images/default.png" style="width:80px;height:80px;border:1px solid black;" />
+                            </div>
+                            <div class="d-block py-2 pr-2">
+                                <MudButton HtmlTag="label"
+                                           Variant="Variant.Filled"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Filled.Image"
+                                           for="fileInput">
+                                    Upload image
+                                </MudButton>
+                                <input type="file" id="fileInput" name="fileInput" hidden>
+                            </div>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField T="string" Label="Item Name" Required="true" RequiredError="Item Name is required!" />
+                        <MudTextField T="string" Label="Description" Required="true" RequiredError="Item is required!" Variant="Variant.Text" Lines="5" />
+                    </MudItem>
+                    <MudItem xs="12" md="6"></MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                     Label="Enabled" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField T="string" Label="Price" Required="true" RequiredError="Price is required!" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField T="string" Label="Discount Price" Required="true" RequiredError="Discount Price is required!" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudPaper Class="pa-4">
+                            <b>Available Discounts:</b>
+                            <MudList Clickable="true" @bind-SelectedItem="selectedItem">
+                                <MudListItem Text="1">Discount Monday</MudListItem>
+                                <MudListItem Text="2">Discount Tuesday</MudListItem>
+                                <MudListItem Text="3">Discount 22/03/2021</MudListItem>
+                            </MudList>
+                            <MudLink Href="/adddiscount">Add New Discount</MudLink>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="12">
+                        @*<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Category</MudButton>*@
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Add More</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </div>
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+    MudListItem selectedItem;
+    MudTabs tabs;
+    void Activate(int index)
+    {
+        tabs.ActivatePanel(index);
+    }
+}

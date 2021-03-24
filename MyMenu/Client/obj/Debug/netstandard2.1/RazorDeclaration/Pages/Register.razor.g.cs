@@ -106,7 +106,7 @@ using System.ComponentModel.DataAnnotations;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 98 "D:\new project\MyMenu\Client\Pages\Register.razor"
+#line 49 "D:\new project\MyMenu\Client\Pages\Register.razor"
        
 
 
