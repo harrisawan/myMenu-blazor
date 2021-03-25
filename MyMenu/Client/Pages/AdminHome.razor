@@ -1,95 +1,144 @@
 ﻿@page "/adminHome"
 @layout AdminLayout
+@inject ISnackbar Snackbar
+@inject IDialogService Dialog
 
-<MudContainer Class="mt-9">
-    <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
-        <MudButton Link="/addcompany" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Company</MudButton>
-    </MudPaper>
-    <MudGrid>
-        <MudItem xs="12" sm="6" md="4">
-            <MudCard Elevation="4">
-                <MudCardHeader>
-                    <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1">Company Name</MudText>
-                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
-                    </CardHeaderActions>
-                </MudCardHeader>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudCard Elevation="4">
-                <MudCardHeader>
-                    <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1">Company Name</MudText>
-                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
-                    </CardHeaderActions>
-                </MudCardHeader>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudCard Elevation="4">
-                <MudCardHeader>
-                    <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1">Company Name</MudText>
-                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
-                    </CardHeaderActions>
-                </MudCardHeader>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudCard Elevation="4">
-                <MudCardHeader>
-                    <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1">Company Name</MudText>
-                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
-                    </CardHeaderActions>
-                </MudCardHeader>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudCard Elevation="4">
-                <MudCardHeader>
-                    <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1">Company Name</MudText>
-                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
-                    </CardHeaderActions>
-                </MudCardHeader>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
+@if (Companies == null)
+{
+}
+else
+{
+    <MudContainer Class="mt-9">
+        <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@OpenDialog">New Company</MudButton>
+        </MudPaper>
 
-</MudContainer>
+
+        <MudTable Items="@Companies" Dense="@dense" Hover="@hover" ReadOnly="@ronly" Filter="new Func<Company,bool>(FilterFunc)" @bind-SelectedItem="selectedItem" SortLabel="Sort By" CommitEditTooltip="Commit Edit" OnCommitEditClick="@(() => Snackbar.Add("Commit Edit Handler Invoked"))">
+            <ToolBarContent>
+                <MudText Typo="Typo.h5" Color="Color.Primary">COMPANIES LIST</MudText>
+                <MudToolBarSpacer />
+                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <ColGroup>
+                <col style="width:10%;" />
+                <col style="width:20%" />
+                <col style="width:50%;" />
+                <col style="width:20%;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<Company, object>(x=>x.Id)">Company Id</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Company, object>(x=>x.Name)">Company Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<Company, object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Nr">@context.Id</MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="Molar mass"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+            </RowTemplate>
+            @*<RowEditingTemplate>
+                    <MudTd DataLabel="Nr">@context.Number</MudTd>
+                    <MudTd DataLabel="Sign">
+                        <MudTextField @bind-Value="@context.Sign" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Name">
+                        <MudTextField @bind-Value="@context.Name" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Position">
+                        <MudTextField @bind-Value="@context.Position" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Molar mass">
+                        <MudTextField @bind-Value="@context.Molar" Required />
+                    </MudTd>
+                </RowEditingTemplate>*@
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+        @*<MudSwitch @bind-Checked="@hover" Color="Color.Primary">Hover</MudSwitch>
+        <MudSwitch @bind-Checked="@dense" Color="Color.Secondary">Dense</MudSwitch>
+        <MudSwitch @bind-Checked="@ronly" Color="Color.Tertiary">Read Only</MudSwitch>
+        <MudText Inline="true">Selected: @selectedItem?.Name</MudText>*@
+
+
+        <MudDialog @bind-IsVisible="visible">
+            <TitleContent>
+                <MudText Typo="Typo.h6">
+                    Add Company
+                </MudText>
+            </TitleContent>
+            <DialogContent>
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <div class=" mt-4">
+                                    <div class="d-inline">
+
+                                        @*<BlazorInputFile.InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />*@
+                                        <MudButton HtmlTag="label"
+                                                   Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Filled.Image"
+                                                   for="fileInput">
+                                            Upload Logo
+                                        </MudButton>
+                                    </div>
+                                    <div class="d-inline pa-2"><input type="file" id="fileInput" name="fileInput" hidden></div>
+                                </div>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField T="string" Label="Company Name" Required="true" RequiredError="Company Name is required!" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField T="string" Label="Company Moto" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                            </MudItem>
+                        </MudGrid>
+                    
+            </DialogContent>
+            <DialogActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Save</MudButton>
+            </DialogActions>
+            
+        </MudDialog>
+
+    </MudContainer>
+}
+
 
 @code {
+    private List<Company> Companies = new List<Company>()
+    {
+        new Company(){ Id = 1, Name="Company A",Description="Company A Description"},
+                new Company(){ Id = 2, Name="Company B",Description="Company B Description"},
+                new Company(){ Id = 3, Name="Company c",Description="Company C Description"},
+                new Company(){ Id = 4, Name="Company d",Description="Company D Description"}
+    };
+    private bool dense = false;
+    private bool hover = true;
+    private bool ronly = false;
+    private string searchString = "";
+    private Company selectedItem = null;
 
+    // Dialog Box
+    private bool visible;
+    private int rating;
+    private void OpenDialog()
+    {
+        visible = true;
+    }
+    void Submit() => visible = false;
+
+
+    
+    private bool FilterFunc(Company company)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (company.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        //if ($"{element.Number} {element.Position} {element.Molar}".Contains(searchString))
+        //    return true;
+        return false;
+    }
 }

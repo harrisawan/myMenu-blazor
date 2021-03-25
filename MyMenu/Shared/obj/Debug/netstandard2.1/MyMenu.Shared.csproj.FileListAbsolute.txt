@@ -12,9 +12,9 @@ D:\new project\MyMenu\Shared\bin\Debug\netstandard2.1\appsettings.json
 D:\new project\MyMenu\Shared\bin\Debug\netstandard2.1\MyMenu.Shared.deps.json
 D:\new project\MyMenu\Shared\bin\Debug\netstandard2.1\MyMenu.Shared.dll
 D:\new project\MyMenu\Shared\bin\Debug\netstandard2.1\MyMenu.Shared.pdb
-D:\new project\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.csprojAssemblyReference.cache
 D:\new project\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.AssemblyInfoInputs.cache
 D:\new project\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.AssemblyInfo.cs
 D:\new project\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.csproj.CoreCompileInputs.cache
 D:\new project\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.dll
 D:\new project\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.pdb
+D:\new project\MyMenu\Shared\obj\Debug\netstandard2.1\MyMenu.Shared.csprojAssemblyReference.cache

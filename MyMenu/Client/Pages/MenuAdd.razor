@@ -1,0 +1,345 @@
+﻿@page "/menuadd"
+@layout AdminLayout
+@inject ISnackbar Snackbar
+@inject IDialogService Dialog
+@if (menuList == null && categoryList == null && itemList == null)
+{
+
+}
+else
+{
+    <MudTabs Elevation="0" @ref="tabs" Rounded="true" Centered="true">
+        <MudTabPanel Text="Item One" Style="display: none">
+            <MudContainer>
+                <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@MenuOpenDialog">New Menu</MudButton>
+                    <MudButton Variant="Variant.Outlined" Class="ml-1" StartIcon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" OnClick="() => Activate(1)">Category</MudButton>
+                </MudPaper>
+                <MudTable Items="@menuList" Hover="true" Dense="true" Filter="new Func<Menu, bool>(FilterFunc)" SortLabel="Sort By">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h5" Color="Color.Primary">MENU LIST</MudText>
+                        <MudToolBarSpacer />
+                        <MudTextField @bind-Value="menusearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <ColGroup>
+                        <col style="width:10%;" />
+                        <col style="width:20%" />
+                        <col style="width:50%;" />
+                        <col style="width:20%;" />
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Menu,object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Menu,object>(x=>x.Name)">Menu Name</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Menu,object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
+                        <MudTh>Actions</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Menu Name">@context.Name</MudTd>
+                        <MudTd DataLabel="Description">@context.Description</MudTd>
+                        <MudTd DataLabel="Action"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+                    </RowTemplate>
+                </MudTable>
+                <MudDialog @bind-IsVisible="menuDialogVisible">
+                    <TitleContent>
+                        <MudText Typo="Typo.h6">
+                            Add Menu
+                        </MudText>
+                    </TitleContent>
+                    <DialogContent>
+                        <MudGrid>
+                            <MudItem xs="12" md="6">
+                                <div>
+                                    <div class="d-block pa-2">
+                                        <img src="/images/default.png" style="width:80px;height:80px;border:1px solid black;" />
+                                    </div>
+                                    <div class="d-block py-2 pr-2">
+                                        <MudButton HtmlTag="label"
+                                                   Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Filled.Image"
+                                                   for="fileInput">
+                                            Upload image
+                                        </MudButton>
+                                        <input type="file" id="fileInput" name="fileInput" hidden>
+                                    </div>
+                                </div>
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudTextField T="string" Label="Resturant Name" Required="true" RequiredError="Company Name is required!" />
+                                <MudTextField T="string" Label="Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                            </MudItem>
+                            <MudItem xs="12" md="6"></MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                             Label="Enabled" />
+                            </MudItem>
+                        </MudGrid>
+                    </DialogContent>
+                    <DialogActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="MenuDialogClose" Class="px-10">Close</MudButton>
+                    </DialogActions>
+                </MudDialog>
+            </MudContainer>
+        </MudTabPanel>
+        <MudTabPanel Text="Item Two" Style="display: none">
+            <MudContainer>
+                <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@CategoryOpenDialog">New Category</MudButton>
+                    <MudButton Variant="Variant.Outlined" Class="ml-1" StartIcon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" OnClick="() => Activate(2)">Item</MudButton>
+                </MudPaper>
+                <MudTable Items="@categoryList" Hover="true" Dense="true" Filter="new Func<Category, bool>(FilterFunc)" SortLabel="Sort By">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h5" Color="Color.Primary">CATEGORY LIST</MudText>
+                        <MudToolBarSpacer />
+                        <MudTextField @bind-Value="categorysearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <ColGroup>
+                        <col style="width:10%;" />
+                        <col style="width:20%" />
+                        <col style="width:50%;" />
+                        <col style="width:20%;" />
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Category,object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Category,object>(x=>x.Name)">Category Name</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Category,object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
+                        <MudTh>Actions</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Category Name">@context.Name</MudTd>
+                        <MudTd DataLabel="Description">@context.Description</MudTd>
+                        <MudTd DataLabel="Action"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+                    </RowTemplate>
+                </MudTable>
+                <MudDialog @bind-IsVisible="categoryDialogVisible">
+                    <TitleContent>
+                        <MudText Typo="Typo.h6">
+                            Add Category
+                        </MudText>
+                    </TitleContent>
+                    <DialogContent>
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <MudSelect T="string" Label="Select Menu">
+                                    <MudSelectItem Value="@("Menu 1")" />
+                                    <MudSelectItem Value="@("Menu 2")" />
+                                    <MudSelectItem Value="@("Menu 3")" />
+                                    <MudSelectItem Value="@("Menu 4")" />
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField T="string" Label="Category Name" Required="true" RequiredError="Category Name is required!" />
+                                <MudTextField T="string" Label="Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                             Label="Enabled" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => Activate(2)" Class="mt-2">Items</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Add More</MudButton>
+                            </MudItem>
+                        </MudGrid>
+                    </DialogContent>
+                    <DialogActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CategoryDialogClose" Class="px-10">Close</MudButton>
+                    </DialogActions>
+                </MudDialog>
+            </MudContainer>
+        </MudTabPanel>
+        <MudTabPanel Text="Item Three" Style="display: none">
+            <MudContainer>
+                <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@ItemOpenDialog">New Item</MudButton>
+                </MudPaper>
+                <MudTable Items="@itemList" Hover="true" Dense="true" Filter="new Func<Item, bool>(FilterFunc)" SortLabel="Sort By">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h5" Color="Color.Primary">ITEM LIST</MudText>
+                        <MudToolBarSpacer />
+                        <MudTextField @bind-Value="itemsearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <ColGroup>
+                        <col style="width:10%;" />
+                        <col style="width:20%" />
+                        <col style="width:50%;" />
+                        <col style="width:20%;" />
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Item, object>(x=>x.Name)">Item Name</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<Item,object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
+                        <MudTh>Actions</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Item Name">@context.Name</MudTd>
+                        <MudTd DataLabel="Description">@context.Description</MudTd>
+                        <MudTd DataLabel="Action"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+                    </RowTemplate>
+                </MudTable>
+                <MudDialog @bind-IsVisible="itemDialogVisible">
+                    <TitleContent>
+                        <MudText Typo="Typo.h6">
+                            Add Item
+                        </MudText>
+                    </TitleContent>
+                    <DialogContent>
+                        <MudContainer Style="max-height: 400px; overflow-y: scroll">
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudSelect T="string" Label="Select Category">
+                                        <MudSelectItem Value="@("Category 1")" />
+                                        <MudSelectItem Value="@("Category 2")" />
+                                        <MudSelectItem Value="@("Category 3")" />
+                                        <MudSelectItem Value="@("Category 4")" />
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="12" md="6">
+                                    <div>
+                                        <div class="d-block pa-2">
+                                            <img src="/images/default.png" style="width:80px;height:80px;border:1px solid black;" />
+                                        </div>
+                                        <div class="d-block py-2 pr-2">
+                                            <MudButton HtmlTag="label"
+                                                       Variant="Variant.Filled"
+                                                       Color="Color.Primary"
+                                                       StartIcon="@Icons.Filled.Image"
+                                                       for="fileInput">
+                                                Image
+                                            </MudButton>
+                                            <input type="file" id="fileInput" name="fileInput" hidden>
+                                        </div>
+                                    </div>
+                                </MudItem>
+                                <MudItem xs="12" md="6">
+                                    <MudTextField T="string" Label="Item Name" Required="true" RequiredError="Item Name is required!" />
+                                    <MudTextField T="string" Label="Description" Required="true" RequiredError="Item is required!" Variant="Variant.Text" Lines="5" />
+                                </MudItem>
+                                <MudItem xs="12" md="6"></MudItem>
+                                <MudItem xs="12" md="6">
+                                    <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                                 Label="Enabled" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField T="string" Label="Price" Required="true" RequiredError="Price is required!" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField T="string" Label="Discount Price" Required="true" RequiredError="Discount Price is required!" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudPaper Class="pa-4">
+                                        <b>Available Discounts:</b>
+                                        <MudList Clickable="true" @bind-SelectedItem="discountSelectedItem">
+                                            <MudListItem Text="1" Icon="@Icons.Material.Filled.Loyalty" IconColor="Color.Primary"> Discount Monday</MudListItem>
+                                            <MudListItem Text="2" Icon="@Icons.Material.Filled.Loyalty" IconColor="Color.Primary">Discount Tuesday</MudListItem>
+                                            <MudListItem Text="3" Icon="@Icons.Material.Filled.Loyalty" IconColor="Color.Primary">Discount 22/03/2021</MudListItem>
+                                        </MudList>
+                                        <MudLink Href="/newdiscount">Add New Discount</MudLink>
+                                    </MudPaper>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Add More</MudButton>
+                                </MudItem>
+                            </MudGrid>
+                        </MudContainer>
+                    </DialogContent>
+                    <DialogActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ItemDialogClose" Class="px-10">Close</MudButton>
+                    </DialogActions>
+                </MudDialog>
+            </MudContainer>
+        </MudTabPanel>
+    </MudTabs>
+}
+
+
+@code {
+    List<Menu> menuList = new List<Menu>()
+{
+        new Menu{Id=1, Name="Menu 1", Description="Menu 1 Description"},
+        new Menu{Id=2, Name="Menu 2", Description="Menu 2 Description"},
+        new Menu{Id=3, Name="Menu 3", Description="Menu 3 Description"},
+        new Menu{Id=4, Name="Menu 4", Description="Menu 4 Description"},
+        new Menu{Id=5, Name="Menu 5", Description="Menu 5 Description"}
+    };
+    List<Category> categoryList = new List<Category>()
+{
+        new Category{Id=1, Name="Category 1", Description="Category 1 Description"},
+        new Category{Id=2, Name="Category 2", Description="Category 2 Description"},
+        new Category{Id=3, Name="Category 3", Description="Category 3 Description"},
+        new Category{Id=4, Name="Category 4", Description="Category 4 Description"},
+        new Category{Id=5, Name="Category 5", Description="Category 5 Description"}
+    };
+    List<Item> itemList = new List<Item>()
+{
+        new Item{Id=1, Name="Item 1", Description="Item 1 Description"},
+        new Item{Id=2, Name="Item 2", Description="Item 2 Description"},
+        new Item{Id=3, Name="Item 3", Description="Item 3 Description"},
+        new Item{Id=4, Name="Item 4", Description="Item 4 Description"},
+        new Item{Id=5, Name="Item 5", Description="Item 5 Description"}
+    };
+    private bool dense = false;
+    private bool hover = true;
+    private bool ronly = false;
+    private string menusearchString = "";
+    private string categorysearchString = "";
+    private string itemsearchString = "";
+    private Company selectedItem = null;
+
+    // Dialog Box
+    private bool menuDialogVisible;
+    private bool categoryDialogVisible;
+    private bool itemDialogVisible;
+    private int rating;
+    private void MenuOpenDialog()
+    {
+        menuDialogVisible = true;
+    }
+    void MenuDialogClose() => menuDialogVisible = false;
+
+    private void CategoryOpenDialog()
+    {
+        categoryDialogVisible = true;
+    }
+    void CategoryDialogClose() => categoryDialogVisible = false;
+
+    private void ItemOpenDialog()
+    {
+        itemDialogVisible = true;
+    }
+    void ItemDialogClose() => itemDialogVisible = false;
+
+    MudListItem discountSelectedItem;
+    MudTabs tabs;
+
+    private bool FilterFunc(Menu m)
+    {
+        if (string.IsNullOrWhiteSpace(menusearchString))
+            return true;
+        if (m.Name.Contains(menusearchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+    private bool FilterFunc(Category c)
+    {
+        if (string.IsNullOrWhiteSpace(menusearchString))
+            return true;
+        if (c.Name.Contains(menusearchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+    private bool FilterFunc(Item i)
+    {
+        if (string.IsNullOrWhiteSpace(menusearchString))
+            return true;
+        if (i.Name.Contains(menusearchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+    void Activate(int index)
+    {
+        tabs.ActivatePanel(index);
+    }
+}

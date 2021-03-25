@@ -1,6 +1,10 @@
 ﻿@inherits LayoutComponentBase
 <MudThemeProvider />
-<MudDialogProvider />
+<MudDialogProvider FullWidth="true"
+                   MaxWidth="MaxWidth.ExtraSmall"
+                   CloseButton="true"
+                   DisableBackdropClick="true"
+                   Position="DialogPosition.Center" />
 <MudSnackbarProvider />
 <MudLayout>
     <MudAppBar Elevation="4">
@@ -22,8 +26,8 @@
             <MudDivider Class="my-2" />
             <MudNavLink Href="/adminHome" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
             <MudNavLink Href="#" Icon="@Icons.Material.Filled.Money">Payments</MudNavLink>
-            <MudNavLink Href="/addcompany" Icon="@Icons.Material.Filled.HomeWork">Company</MudNavLink>
-            <MudNavLink Href="/menu" Icon="@Icons.Material.Filled.RestaurantMenu">Menus</MudNavLink>
+            <MudNavLink Href="#" Icon="@Icons.Material.Filled.HomeWork">Company</MudNavLink>
+            <MudNavLink Href="/menuadd" Icon="@Icons.Material.Filled.RestaurantMenu">Menus</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent>

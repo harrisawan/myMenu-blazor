@@ -76,22 +76,29 @@ using MyMenu.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "D:\new project\MyMenu\Client\_Imports.razor"
+#line 11 "D:\new project\MyMenu\Client\_Imports.razor"
 using MudBlazor;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 11 "D:\new project\MyMenu\Client\_Imports.razor"
+#line 12 "D:\new project\MyMenu\Client\_Imports.razor"
 using System.Text.RegularExpressions;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 12 "D:\new project\MyMenu\Client\_Imports.razor"
+#line 13 "D:\new project\MyMenu\Client\_Imports.razor"
 using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 14 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Shared.Models;
 
 #line default
 #line hidden
@@ -105,6 +112,49 @@ using System.ComponentModel.DataAnnotations;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 109 "D:\new project\MyMenu\Client\Pages\AdminHome.razor"
+       
+    private List<Company> Companies = new List<Company>()
+    {
+        new Company(){ Id = 1, Name="Company A",Description="Company A Description"},
+                new Company(){ Id = 2, Name="Company B",Description="Company B Description"},
+                new Company(){ Id = 3, Name="Company c",Description="Company C Description"},
+                new Company(){ Id = 4, Name="Company d",Description="Company D Description"}
+    };
+    private bool dense = false;
+    private bool hover = true;
+    private bool ronly = false;
+    private string searchString = "";
+    private Company selectedItem = null;
+
+    // Dialog Box
+    private bool visible;
+    private int rating;
+    private void OpenDialog()
+    {
+        visible = true;
+    }
+    void Submit() => visible = false;
+
+
+    
+    private bool FilterFunc(Company company)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (company.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        //if ($"{element.Number} {element.Position} {element.Molar}".Contains(searchString))
+        //    return true;
+        return false;
+    }
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IDialogService Dialog { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private ISnackbar Snackbar { get; set; }
     }
 }
 #pragma warning restore 1591

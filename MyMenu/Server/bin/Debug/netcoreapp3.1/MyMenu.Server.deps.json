@@ -1709,6 +1709,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Components.WebAssembly": "3.2.1",
           "MudBlazor": "2.0.6",
+          "MyMenu.Shared": "1.0.0",
           "System.Net.Http.Json": "3.2.0"
         },
         "runtime": {

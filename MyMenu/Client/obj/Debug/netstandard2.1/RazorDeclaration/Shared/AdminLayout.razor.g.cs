@@ -76,22 +76,29 @@ using MyMenu.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "D:\new project\MyMenu\Client\_Imports.razor"
+#line 11 "D:\new project\MyMenu\Client\_Imports.razor"
 using MudBlazor;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 11 "D:\new project\MyMenu\Client\_Imports.razor"
+#line 12 "D:\new project\MyMenu\Client\_Imports.razor"
 using System.Text.RegularExpressions;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 12 "D:\new project\MyMenu\Client\_Imports.razor"
+#line 13 "D:\new project\MyMenu\Client\_Imports.razor"
 using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 14 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Shared.Models;
 
 #line default
 #line hidden
@@ -104,7 +111,7 @@ using System.ComponentModel.DataAnnotations;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 34 "D:\new project\MyMenu\Client\Shared\AdminLayout.razor"
+#line 38 "D:\new project\MyMenu\Client\Shared\AdminLayout.razor"
         bool _drawerOpen = true;
 
     void DrawerToggle()

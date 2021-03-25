@@ -77,21 +77,35 @@ using MyMenu.Client.Shared;
 #nullable disable
 #nullable restore
 #line 10 "D:\new project\MyMenu\Client\_Imports.razor"
-using MudBlazor;
+using MyMenu.Shared.Models;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 11 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.Text.RegularExpressions;
+using MudBlazor;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 12 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.Text.RegularExpressions;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 13 "D:\new project\MyMenu\Client\_Imports.razor"
 using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 14 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Shared.Models;
 
 #line default
 #line hidden
