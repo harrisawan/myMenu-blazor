@@ -1,0 +1,24 @@
+﻿@inject ICompanyService companyService
+<AuthorizeView>
+    <Authorized>
+        <MudLink Class="pa-2 mud-theme-primary">
+            @{
+                string authName = context.User.Identity.Name;
+            }
+            @authName
+        </MudLink>
+        <MudLink Href="LogOut" Class="pa-2 mud-theme-primary">Log out</MudLink>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+@code{
+    //string authName;
+    //string Username;
+    ////protected override async Task OnInitializedAsync()
+    ////{
+    ////    //var result = await companyService.GetUserByEmail(auth);
+    ////    //Username = result.FirstName + result.LastName;
+    ////}
+}

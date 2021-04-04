@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MyMenu.Shared.Models
 {
-    public partial class Company
+    public class Company
     {
         public Company()
         {
@@ -14,7 +14,7 @@ namespace MyMenu.Shared.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string ImgUrl { get; set; }
+        public byte[] ImgUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool? IsActive { get; set; }

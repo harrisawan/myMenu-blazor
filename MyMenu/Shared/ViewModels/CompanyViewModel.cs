@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace MyMenu.Shared.ViewModels
         public string Name { get; set; }
         public long UserId { get; set; }
         public string Description { get; set; }
-        public string ImgUrl { get; set; }
+        public byte[] Photo { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool? IsActive { get; set; }

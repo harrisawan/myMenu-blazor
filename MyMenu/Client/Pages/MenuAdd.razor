@@ -1,21 +1,24 @@
-﻿@page "/menuadd"
+﻿@page "/menuadd/{companyid}"
 @layout AdminLayout
 @inject ISnackbar Snackbar
 @inject IDialogService Dialog
-@if (menuList == null && categoryList == null && itemList == null)
-{
+@inject IMenuService menuService
+@inject IItemService itemService
+@inject IDiscountService discountService
+@inject ICategoryService categoryService
+@inject IMyService myService
+@using MudBlazor.Services
 
-}
-else
-{
-    <MudTabs Elevation="0" @ref="tabs" Rounded="true" Centered="true">
-        <MudTabPanel Text="Item One" Style="display: none">
-            <MudContainer>
-                <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
-                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@MenuOpenDialog">New Menu</MudButton>
-                    <MudButton Variant="Variant.Outlined" Class="ml-1" StartIcon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" OnClick="() => Activate(1)">Category</MudButton>
-                </MudPaper>
-                <MudTable Items="@menuList" Hover="true" Dense="true" Filter="new Func<Menu, bool>(FilterFunc)" SortLabel="Sort By">
+<MudTabs Elevation="0" @ref="tabs" Rounded="true" Centered="true">
+    <MudTabPanel Text="Item One" Style="display: none">
+        <MudContainer>
+            <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@MenuOpenDialog">New Menu</MudButton>
+                <MudButton Variant="Variant.Outlined" Class="ml-1" StartIcon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" OnClick="() => Activate(1)">Category</MudButton>
+            </MudPaper>
+            @if (menusList != null)
+            {
+                <MudTable Items="@menusList" Hover="true" Dense="true" Filter="new Func<Menu, bool>(FilterFunc)" SortLabel="Sort By" @bind-SelectedItem="@menuselectedItem">
                     <ToolBarContent>
                         <MudText Typo="Typo.h5" Color="Color.Primary">MENU LIST</MudText>
                         <MudToolBarSpacer />
@@ -23,72 +26,109 @@ else
                     </ToolBarContent>
                     <ColGroup>
                         <col style="width:10%;" />
+                        <col style="width:10%;" />
                         <col style="width:20%" />
-                        <col style="width:50%;" />
+                        <col style="width:40%;" />
                         <col style="width:20%;" />
                     </ColGroup>
                     <HeaderContent>
                         <MudTh><MudTableSortLabel SortBy="new Func<Menu,object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+                        <MudTh>Logo</MudTh>
                         <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Menu,object>(x=>x.Name)">Menu Name</MudTableSortLabel></MudTh>
                         <MudTh><MudTableSortLabel SortBy="new Func<Menu,object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
                         <MudTh>Actions</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Logo">
+                            <img src="@ConvertImageToDisplay(context.ImgUrl)" style="width:50px;height:50px;" />
+                        </MudTd>
                         <MudTd DataLabel="Menu Name">@context.Name</MudTd>
                         <MudTd DataLabel="Description">@context.Description</MudTd>
-                        <MudTd DataLabel="Action"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+                        <MudTd DataLabel="Action">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" OnClick="OpenEditDialog" Class="ma-2"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="DeleteMenuHandler" Size="Size.Medium" Class="ma-2"></MudIconButton>
+                        </MudTd>
                     </RowTemplate>
                 </MudTable>
-                <MudDialog @bind-IsVisible="menuDialogVisible">
-                    <TitleContent>
+            }
+
+            <MudDialog @bind-IsVisible="menuDialogVisible">
+                <TitleContent>
+                    @if (menuselectedItem == null)
+                    {
                         <MudText Typo="Typo.h6">
                             Add Menu
                         </MudText>
-                    </TitleContent>
-                    <DialogContent>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.h6">
+                            Update Menu
+                        </MudText>
+                    }
+                </TitleContent>
+                <DialogContent>
+                    <EditForm Model="menuViewModel" OnValidSubmit="AddNewMenuHandler">
                         <MudGrid>
                             <MudItem xs="12" md="6">
                                 <div>
                                     <div class="d-block pa-2">
-                                        <img src="/images/default.png" style="width:80px;height:80px;border:1px solid black;" />
+                                        @if (imageUploaded != null)
+                                        {
+                                            <img src="@ConvertImageToDisplay(imageUploaded)" style="width:80px;height:80px;border:1px solid black;" />
+                                        }
                                     </div>
                                     <div class="d-block py-2 pr-2">
                                         <MudButton HtmlTag="label"
                                                    Variant="Variant.Filled"
                                                    Color="Color.Primary"
                                                    StartIcon="@Icons.Filled.Image"
-                                                   for="fileInput">
+                                                   for="fileInputMenu">
                                             Upload image
                                         </MudButton>
-                                        <input type="file" id="fileInput" name="fileInput" hidden>
+                                        <InputFile id="fileInputMenu" OnChange="HandleSelection" hidden />
+                                        <p><b>@status</b></p>
                                     </div>
                                 </div>
                             </MudItem>
                             <MudItem xs="12" md="6">
-                                <MudTextField T="string" Label="Resturant Name" Required="true" RequiredError="Company Name is required!" />
-                                <MudTextField T="string" Label="Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                                <MudTextField T="string" Label="Resturant Name" @bind-Value="@menuViewModel.Name" Required="true" RequiredError="Resturant Name is required!" />
+                                <MudTextField T="string" Label="Description" @bind-Value="@menuViewModel.Description" Required="true" RequiredError="Moto is required!" />
                             </MudItem>
                             <MudItem xs="12" md="6"></MudItem>
                             <MudItem xs="12" md="6">
-                                <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                <MudCheckBox T="bool" Required="true" @bind-Checked="@menuViewModel.IsActive" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
                                              Label="Enabled" />
                             </MudItem>
                         </MudGrid>
-                    </DialogContent>
-                    <DialogActions>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="MenuDialogClose" Class="px-10">Close</MudButton>
-                    </DialogActions>
-                </MudDialog>
-            </MudContainer>
-        </MudTabPanel>
-        <MudTabPanel Text="Item Two" Style="display: none">
-            <MudContainer>
-                <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
-                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@CategoryOpenDialog">New Category</MudButton>
-                    <MudButton Variant="Variant.Outlined" Class="ml-1" StartIcon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" OnClick="() => Activate(2)">Item</MudButton>
-                </MudPaper>
-                <MudTable Items="@categoryList" Hover="true" Dense="true" Filter="new Func<Category, bool>(FilterFunc)" SortLabel="Sort By">
+                    </EditForm>
+                </DialogContent>
+                <DialogActions>
+
+                    @if (menuselectedItem == null)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddNewMenuHandler" Class="px-10">Save</MudButton>
+                        <MudButton Variant="Variant.Filled" OnClick="ResetMenuForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="UpdateMenuHandler" Color="Color.Primary" Class="px-10">Update</MudButton>
+                        <MudButton Variant="Variant.Filled" OnClick="ResetMenuForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+                    }
+                </DialogActions>
+            </MudDialog>
+        </MudContainer>
+    </MudTabPanel>
+    <MudTabPanel Text="Item Two" Style="display: none">
+        <MudContainer>
+            <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@CategoryOpenDialog">New Category</MudButton>
+                <MudButton Variant="Variant.Outlined" Class="ml-1" StartIcon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" OnClick="() => Activate(2)">Item</MudButton>
+            </MudPaper>
+            @if (categoryList != null)
+            {
+                <MudTable Items="@categoryList" Hover="true" Dense="true" Filter="new Func<Category, bool>(CategoryFilterFunc)" SortLabel="Sort By" @bind-SelectedItem="@categoryselectedItem">
                     <ToolBarContent>
                         <MudText Typo="Typo.h5" Color="Color.Primary">CATEGORY LIST</MudText>
                         <MudToolBarSpacer />
@@ -110,51 +150,77 @@ else
                         <MudTd DataLabel="Id">@context.Id</MudTd>
                         <MudTd DataLabel="Category Name">@context.Name</MudTd>
                         <MudTd DataLabel="Description">@context.Description</MudTd>
-                        <MudTd DataLabel="Action"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+                        <MudTd DataLabel="Action">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" OnClick="OpenCategoryEditDialog" Class="ma-2"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" OnClick="DeleteCategoryHandler" Class="ma-2"></MudIconButton>
+                        </MudTd>
                     </RowTemplate>
                 </MudTable>
-                <MudDialog @bind-IsVisible="categoryDialogVisible">
-                    <TitleContent>
+            }
+            <MudDialog @bind-IsVisible="categoryDialogVisible">
+                <TitleContent>
+                    @if (categoryselectedItem == null)
+                    {
                         <MudText Typo="Typo.h6">
                             Add Category
                         </MudText>
-                    </TitleContent>
-                    <DialogContent>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.h6">
+                            Update Category
+                        </MudText>
+                    }
+                    <MudText Typo="Typo.h6">
+
+                    </MudText>
+                </TitleContent>
+                <DialogContent>
+                    <EditForm Model="categoryViewModel" OnValidSubmit="AddNewCategoryHandler">
                         <MudGrid>
                             <MudItem xs="12">
-                                <MudSelect T="string" Label="Select Menu">
-                                    <MudSelectItem Value="@("Menu 1")" />
-                                    <MudSelectItem Value="@("Menu 2")" />
-                                    <MudSelectItem Value="@("Menu 3")" />
-                                    <MudSelectItem Value="@("Menu 4")" />
+                                <MudSelect T="string" Label="Select Menu" @bind-Value="@Menudropdownvalue">
+                                    @foreach (var list in menusList)
+                                    {
+                                        <MudSelectItem Value="@list.Id.ToString()">@list.Name</MudSelectItem>
+                                    }
                                 </MudSelect>
                             </MudItem>
                             <MudItem xs="12">
-                                <MudTextField T="string" Label="Category Name" Required="true" RequiredError="Category Name is required!" />
-                                <MudTextField T="string" Label="Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                                <MudTextField T="string" Label="Category Name" @bind-Value="@categoryViewModel.Name" Required="true" RequiredError="Category Name is required!" />
+                                <MudTextField T="string" Label="Description" @bind-Value="@categoryViewModel.Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
                             </MudItem>
                             <MudItem xs="12">
-                                <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                <MudCheckBox T="bool" Required="true" @bind-Checked="@categoryViewModel.IsActive" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
                                              Label="Enabled" />
                             </MudItem>
-                            <MudItem xs="12">
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => Activate(2)" Class="mt-2">Items</MudButton>
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Add More</MudButton>
-                            </MudItem>
                         </MudGrid>
-                    </DialogContent>
-                    <DialogActions>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CategoryDialogClose" Class="px-10">Close</MudButton>
-                    </DialogActions>
-                </MudDialog>
-            </MudContainer>
-        </MudTabPanel>
-        <MudTabPanel Text="Item Three" Style="display: none">
-            <MudContainer>
-                <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
-                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@ItemOpenDialog">New Item</MudButton>
-                </MudPaper>
-                <MudTable Items="@itemList" Hover="true" Dense="true" Filter="new Func<Item, bool>(FilterFunc)" SortLabel="Sort By">
+                    </EditForm>
+                </DialogContent>
+                <DialogActions>
+                    @if (categoryselectedItem == null)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddNewCategoryHandler" Class="px-10">Save</MudButton>
+                        <MudButton Variant="Variant.Filled" OnClick="ResetCategoryForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="UpdateCategoryHandler" Color="Color.Primary" Class="px-10">Update</MudButton>
+                        <MudButton Variant="Variant.Filled" OnClick="ResetCategoryForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+                    }
+
+                </DialogActions>
+            </MudDialog>
+        </MudContainer>
+    </MudTabPanel>
+    <MudTabPanel Text="Item Three" Style="display: none">
+        <MudContainer>
+            <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@ItemOpenDialog">New Item</MudButton>
+            </MudPaper>
+            @if (itemList != null)
+            {
+                <MudTable Items="@itemList" Hover="true" Dense="true" Filter="new Func<Item, bool>(ItemFilterFunc)" SortLabel="Sort By" @bind-SelectedItem="@itemselectedItem">
                     <ToolBarContent>
                         <MudText Typo="Typo.h5" Color="Color.Primary">ITEM LIST</MudText>
                         <MudToolBarSpacer />
@@ -162,131 +228,174 @@ else
                     </ToolBarContent>
                     <ColGroup>
                         <col style="width:10%;" />
+                        <col style="width:10%;" />
                         <col style="width:20%" />
-                        <col style="width:50%;" />
+                        <col style="width:40%;" />
                         <col style="width:20%;" />
                     </ColGroup>
                     <HeaderContent>
                         <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+                        <MudTh>Logo</MudTh>
                         <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Item, object>(x=>x.Name)">Item Name</MudTableSortLabel></MudTh>
                         <MudTh><MudTableSortLabel SortBy="new Func<Item,object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
                         <MudTh>Actions</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Logo">
+                            <img src="@ConvertImageToDisplay(context.ImgUrl)" style="width:50px;height:50px;" />
+                        </MudTd>
                         <MudTd DataLabel="Item Name">@context.Name</MudTd>
                         <MudTd DataLabel="Description">@context.Description</MudTd>
-                        <MudTd DataLabel="Action"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+                        <MudTd DataLabel="Action">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" OnClick="OpenItemEditDialog" Class="ma-2"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" OnClick="DeleteItemHandler" Class="ma-2"></MudIconButton>
+                        </MudTd>
                     </RowTemplate>
                 </MudTable>
-                <MudDialog @bind-IsVisible="itemDialogVisible">
-                    <TitleContent>
+            }
+
+            <MudDialog @bind-IsVisible="itemDialogVisible">
+                <TitleContent>
+                    @if (itemselectedItem == null)
+                    {
                         <MudText Typo="Typo.h6">
                             Add Item
                         </MudText>
-                    </TitleContent>
-                    <DialogContent>
-                        <MudContainer Style="max-height: 400px; overflow-y: scroll">
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.h6">
+                            Update Item
+                        </MudText>
+                    }
+                </TitleContent>
+                <DialogContent>
+                    <MudContainer Style="max-height: 400px; overflow-y: scroll">
+                        <EditForm Model="itemViewModel" OnValidSubmit="AddNewCategoryHandler">
                             <MudGrid>
                                 <MudItem xs="12">
-                                    <MudSelect T="string" Label="Select Category">
-                                        <MudSelectItem Value="@("Category 1")" />
-                                        <MudSelectItem Value="@("Category 2")" />
-                                        <MudSelectItem Value="@("Category 3")" />
-                                        <MudSelectItem Value="@("Category 4")" />
+                                    <MudSelect T="string" Label="Select Menu" @bind-Value="@Categorydropdownvalue">
+                                        @foreach (var list in categoryList)
+                                        {
+                                            <MudSelectItem Value="@list.Id.ToString()">@list.Name</MudSelectItem>
+                                        }
                                     </MudSelect>
                                 </MudItem>
                                 <MudItem xs="12" md="6">
                                     <div>
                                         <div class="d-block pa-2">
-                                            <img src="/images/default.png" style="width:80px;height:80px;border:1px solid black;" />
+                                            @if (imageUploaded != null)
+                                            {
+                                                <img src="@ConvertImageToDisplay(imageUploaded)" style="width:80px;height:80px;border:1px solid black;" />
+                                            }
                                         </div>
                                         <div class="d-block py-2 pr-2">
                                             <MudButton HtmlTag="label"
                                                        Variant="Variant.Filled"
                                                        Color="Color.Primary"
                                                        StartIcon="@Icons.Filled.Image"
-                                                       for="fileInput">
+                                                       for="fileInputItem">
                                                 Image
                                             </MudButton>
-                                            <input type="file" id="fileInput" name="fileInput" hidden>
+                                            <InputFile id="fileInputItem" OnChange="HandleSelection" hidden />
+                                            <p><b>@status</b></p>
                                         </div>
                                     </div>
                                 </MudItem>
                                 <MudItem xs="12" md="6">
-                                    <MudTextField T="string" Label="Item Name" Required="true" RequiredError="Item Name is required!" />
-                                    <MudTextField T="string" Label="Description" Required="true" RequiredError="Item is required!" Variant="Variant.Text" Lines="5" />
+                                    <MudTextField T="string" Label="Item Name" @bind-Value="@itemViewModel.Name" Required="true" RequiredError="Item Name is required!" />
+                                    <MudTextField T="string" Label="Description" @bind-Value="@itemViewModel.Description" Required="true" RequiredError="Item is required!" Variant="Variant.Text" Lines="5" />
                                 </MudItem>
                                 <MudItem xs="12" md="6"></MudItem>
                                 <MudItem xs="12" md="6">
-                                    <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
+                                    <MudCheckBox T="bool" Required="true" @bind-Checked="@itemViewModel.IsActive" RequiredError="You must agree" Color="Color.Primary" Class="ml-n2"
                                                  Label="Enabled" />
                                 </MudItem>
                                 <MudItem xs="12">
-                                    <MudTextField T="string" Label="Price" Required="true" RequiredError="Price is required!" />
+                                    <MudTextField T="decimal" Label="Price" @bind-Value="@itemViewModel.Price" Required="true" RequiredError="Price is required!" />
                                 </MudItem>
                                 <MudItem xs="12">
-                                    <MudTextField T="string" Label="Discount Price" Required="true" RequiredError="Discount Price is required!" />
+                                    <MudTextField T="decimal" @bind-Value="@itemViewModel.PriceWithDiscount" Label="Discount Price" Required="true" RequiredError="Discount Price is required!" />
                                 </MudItem>
                                 <MudItem xs="12">
-                                    <MudPaper Class="pa-4">
+                                    <MudPaper Class="pa-4" Elevation="0">
                                         <b>Available Discounts:</b>
-                                        <MudList Clickable="true" @bind-SelectedItem="discountSelectedItem">
-                                            <MudListItem Text="1" Icon="@Icons.Material.Filled.Loyalty" IconColor="Color.Primary"> Discount Monday</MudListItem>
-                                            <MudListItem Text="2" Icon="@Icons.Material.Filled.Loyalty" IconColor="Color.Primary">Discount Tuesday</MudListItem>
-                                            <MudListItem Text="3" Icon="@Icons.Material.Filled.Loyalty" IconColor="Color.Primary">Discount 22/03/2021</MudListItem>
-                                        </MudList>
-                                        <MudLink Href="/newdiscount">Add New Discount</MudLink>
+                                        <MudSelect T="string" Label="Select Discount" @bind-Value="@Discountdropdownvalue">
+                                            @foreach (var list in discountList)
+                                            {
+                                                <MudSelectItem Value="@list.Id.ToString()"> @list.Name</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                        @{
+                                            discounturl = "/newdiscount/" + CompanyId;
+                                        }
+                                        <MudLink Href=@discounturl>Add New Discount</MudLink>
                                     </MudPaper>
                                 </MudItem>
-                                <MudItem xs="12">
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Add More</MudButton>
-                                </MudItem>
                             </MudGrid>
-                        </MudContainer>
-                    </DialogContent>
-                    <DialogActions>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ItemDialogClose" Class="px-10">Close</MudButton>
-                    </DialogActions>
-                </MudDialog>
-            </MudContainer>
-        </MudTabPanel>
-    </MudTabs>
-}
-
+                        </EditForm>
+                    </MudContainer>
+                </DialogContent>
+                <DialogActions>
+                    @if (itemselectedItem == null)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddNewItemHandler" Class="px-10">Save</MudButton>
+                        <MudButton Variant="Variant.Filled" OnClick="ResetItemForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="UpdateItemHandler" Color="Color.Primary" Class="px-10">Update</MudButton>
+                        <MudButton Variant="Variant.Filled" OnClick="ResetItemForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+                    }
+                </DialogActions>
+            </MudDialog>
+        </MudContainer>
+    </MudTabPanel>
+</MudTabs>
 
 @code {
-    List<Menu> menuList = new List<Menu>()
-{
-        new Menu{Id=1, Name="Menu 1", Description="Menu 1 Description"},
-        new Menu{Id=2, Name="Menu 2", Description="Menu 2 Description"},
-        new Menu{Id=3, Name="Menu 3", Description="Menu 3 Description"},
-        new Menu{Id=4, Name="Menu 4", Description="Menu 4 Description"},
-        new Menu{Id=5, Name="Menu 5", Description="Menu 5 Description"}
-    };
-    List<Category> categoryList = new List<Category>()
-{
-        new Category{Id=1, Name="Category 1", Description="Category 1 Description"},
-        new Category{Id=2, Name="Category 2", Description="Category 2 Description"},
-        new Category{Id=3, Name="Category 3", Description="Category 3 Description"},
-        new Category{Id=4, Name="Category 4", Description="Category 4 Description"},
-        new Category{Id=5, Name="Category 5", Description="Category 5 Description"}
-    };
-    List<Item> itemList = new List<Item>()
-{
-        new Item{Id=1, Name="Item 1", Description="Item 1 Description"},
-        new Item{Id=2, Name="Item 2", Description="Item 2 Description"},
-        new Item{Id=3, Name="Item 3", Description="Item 3 Description"},
-        new Item{Id=4, Name="Item 4", Description="Item 4 Description"},
-        new Item{Id=5, Name="Item 5", Description="Item 5 Description"}
-    };
+    [Parameter]
+    public string CompanyId { get; set; }
+    [CascadingParameter]
+    public AdminLayout Layout { get; set; }
+    private List<Menu> menusList { get; set; } = new List<Menu>();
+    private List<Category> categoryList { get; set; } = new List<Category>();
+    private List<Item> itemList { get; set; } = new List<Item>();
+    private List<DiscountPeriods> discountList { get; set; } = new List<DiscountPeriods>();
+    private MenuViewModel menuViewModel { get; set; } = new MenuViewModel();
+    private CategoryViewModel categoryViewModel { get; set; } = new CategoryViewModel();
+    private ItemViewModel itemViewModel { get; set; } = new ItemViewModel();
+    string status;
+    string discounturl;
+    public byte[] imageUploaded { get; set; }
+    public string Menudropdownvalue { get; set; }
+    public string Categorydropdownvalue { get; set; }
+    public string Discountdropdownvalue { get; set; }
+    private IFileListEntry file { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+        itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        discountList = (await discountService.GetAllDiscountByCompanyId(CompanyId)).ToList();
+        menuViewModel.IsActive = false;
+        categoryViewModel.IsActive = false;
+        itemViewModel.IsActive = false;
+        Layout.Cid = CompanyId;
+        myService.CallRequestRefresh();
+    }
+
     private bool dense = false;
     private bool hover = true;
     private bool ronly = false;
+    private Menu menuselectedItem = null;
+    private Category categoryselectedItem = null;
+    private Item itemselectedItem = null;
     private string menusearchString = "";
     private string categorysearchString = "";
     private string itemsearchString = "";
-    private Company selectedItem = null;
 
     // Dialog Box
     private bool menuDialogVisible;
@@ -295,18 +404,26 @@ else
     private int rating;
     private void MenuOpenDialog()
     {
+        menuselectedItem = null;
+        menuViewModel = new MenuViewModel();
         menuDialogVisible = true;
     }
     void MenuDialogClose() => menuDialogVisible = false;
 
     private void CategoryOpenDialog()
     {
+        categoryselectedItem = null;
+        categoryViewModel = new CategoryViewModel();
+        Menudropdownvalue = null;
         categoryDialogVisible = true;
     }
     void CategoryDialogClose() => categoryDialogVisible = false;
 
     private void ItemOpenDialog()
     {
+        itemViewModel = new ItemViewModel();
+        Categorydropdownvalue = null;
+        Discountdropdownvalue = null;
         itemDialogVisible = true;
     }
     void ItemDialogClose() => itemDialogVisible = false;
@@ -322,24 +439,260 @@ else
             return true;
         return false;
     }
-    private bool FilterFunc(Category c)
+    private bool CategoryFilterFunc(Category c)
     {
-        if (string.IsNullOrWhiteSpace(menusearchString))
+        if (string.IsNullOrWhiteSpace(categorysearchString))
             return true;
-        if (c.Name.Contains(menusearchString, StringComparison.OrdinalIgnoreCase))
+        if (c.Name.Contains(categorysearchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
     }
-    private bool FilterFunc(Item i)
+    private bool ItemFilterFunc(Item i)
     {
-        if (string.IsNullOrWhiteSpace(menusearchString))
+        if (string.IsNullOrWhiteSpace(itemsearchString))
             return true;
-        if (i.Name.Contains(menusearchString, StringComparison.OrdinalIgnoreCase))
+        if (i.Name.Contains(itemsearchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
     }
     void Activate(int index)
     {
         tabs.ActivatePanel(index);
+    }
+
+
+
+
+    //add
+    private async void AddNewMenuHandler()
+    {
+        menuViewModel.CompanyId = int.Parse(CompanyId);
+        menuViewModel.ImgUrl = imageUploaded;
+        var res = (await menuService.AddNewMenu(menuViewModel));
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Menu added successfully");
+    }
+    private async void AddNewCategoryHandler()
+    {
+        categoryViewModel.CompanyId = int.Parse(CompanyId);
+        categoryViewModel.MenuId = int.Parse(Menudropdownvalue);
+        var res = (await categoryService.AddNewCategory(categoryViewModel));
+        categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Category added successfully");
+    }
+    private async void AddNewItemHandler()
+    {
+        itemViewModel.CompanyId = int.Parse(CompanyId);
+        itemViewModel.CategoryId = int.Parse(Categorydropdownvalue);
+        itemViewModel.DiscountId = int.Parse(Discountdropdownvalue);
+        itemViewModel.ImgUrl = imageUploaded;
+        await itemService.AddNewItem(itemViewModel);
+        itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Item added successfully");
+    }
+
+
+    //image
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+        if (file != null)
+        {
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            status = $"Finished loading {file.Size} bytes from {file.Name}";
+            imageUploaded = ms.ToArray();
+        }
+    }
+    private string ConvertImageToDisplay(byte[] image)
+    {
+        if (image != null)
+        {
+            var base64 = Convert.ToBase64String(image);
+            var fs = string.Format("data:image/jgp;base64,{0}", base64);
+            return fs;
+        }
+        return "";
+    }
+
+
+
+
+    //delete
+    public async Task DeleteMenuHandler()
+    {
+        if (menuselectedItem != null)
+        {
+            await menuService.DeleteMenu(menuselectedItem.Id);
+            Snackbar.Add("Record Deleted");
+            menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+            categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+            itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    public async Task DeleteCategoryHandler()
+    {
+        if (categoryselectedItem != null)
+        {
+            await categoryService.DeleteCategory(categoryselectedItem.Id);
+            categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+            itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+            Snackbar.Add("Record Deleted");
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    public async Task DeleteItemHandler()
+    {
+        if (itemselectedItem != null)
+        {
+            await itemService.DeleteItem(itemselectedItem.Id);
+            Snackbar.Add("Record Deleted");
+            itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+
+
+
+    //Edit Dialog
+    private async Task OpenEditDialog()
+    {
+        if (menuselectedItem != null)
+        {
+            var result = await menuService.GetMenuById(menuselectedItem.Id);
+            menuViewModel = new MenuViewModel();
+            menuViewModel.Name = result.Name;
+            menuViewModel.Description = result.Description;
+            imageUploaded = result.ImgUrl;
+            menuViewModel.IsActive = result.IsActive;
+            menuDialogVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    private async Task OpenCategoryEditDialog()
+    {
+        if (categoryselectedItem != null)
+        {
+            var result = await categoryService.GetCategoryById(categoryselectedItem.Id);
+            categoryViewModel = new CategoryViewModel();
+            categoryViewModel.Name = result.Name;
+            Menudropdownvalue = result.MenuId.ToString();
+            categoryViewModel.Description = result.Description;
+            categoryViewModel.IsActive = result.IsActive;
+            categoryDialogVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    private async Task OpenItemEditDialog()
+    {
+        if (itemselectedItem != null)
+        {
+            var result = await itemService.GetItemById(itemselectedItem.Id);
+            itemViewModel = new ItemViewModel();
+            itemViewModel.Name = result.Name;
+            Categorydropdownvalue = result.CategoryId.ToString();
+            Discountdropdownvalue = result.DiscountId.ToString();
+            itemViewModel.Description = result.Description;
+            imageUploaded = result.ImgUrl;
+            itemViewModel.IsActive = result.IsActive;
+            itemViewModel.Price = result.Price;
+            itemViewModel.PriceWithDiscount = result.PriceWithDiscount;
+            itemDialogVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+
+
+
+    //Edit
+    private async void UpdateMenuHandler()
+    {
+        menuViewModel.CompanyId = int.Parse(CompanyId);
+        if (imageUploaded != null)
+        {
+            menuViewModel.ImgUrl = imageUploaded;
+        }
+        var res = (await menuService.UpdateMenu(menuViewModel, menuselectedItem.Id));
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Menu Updated successfully");
+    }
+    private async void UpdateCategoryHandler()
+    {
+        categoryViewModel.CompanyId = int.Parse(CompanyId);
+        categoryViewModel.MenuId = int.Parse(Menudropdownvalue);
+        var res = (await categoryService.UpdateCategory(categoryViewModel, categoryselectedItem.Id));
+        categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Category Updated successfully");
+    }
+    private async void UpdateItemHandler()
+    {
+        itemViewModel.CompanyId = int.Parse(CompanyId);
+        itemViewModel.CategoryId = int.Parse(Categorydropdownvalue);
+        itemViewModel.DiscountId = int.Parse(Discountdropdownvalue);
+        if (imageUploaded != null)
+        {
+            itemViewModel.ImgUrl = imageUploaded;
+        }
+        await itemService.UpdateItem(itemViewModel, itemselectedItem.Id);
+        itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Item Updated successfully");
+    }
+
+
+
+    private void ResetMenuForm()
+    {
+        status = "";
+        file = null;
+        imageUploaded = null;
+        menuViewModel.Name = null;
+        menuViewModel.Description = null;
+        menuViewModel.IsActive = false;
+        menuselectedItem = null;
+        menuViewModel = new MenuViewModel();
+    }
+    private void ResetCategoryForm()
+    {
+        Menudropdownvalue = null;
+        categoryViewModel.Name = null;
+        categoryViewModel.Description = null;
+        categoryViewModel.IsActive = false;
+        categoryselectedItem = null;
+        categoryViewModel = new CategoryViewModel();
+    }
+    private void ResetItemForm()
+    {
+        status = "";
+        file = null;
+        imageUploaded = null;
+        itemViewModel.Name = null;
+        itemViewModel.Description = null;
+        itemViewModel.IsActive = false;
+        Discountdropdownvalue = null;
+        itemViewModel.Price = 0.0M;
+        itemViewModel.PriceWithDiscount = 0.0M;
+        itemselectedItem = null;
+        Categorydropdownvalue = null;
+        itemViewModel = new ItemViewModel();
     }
 }

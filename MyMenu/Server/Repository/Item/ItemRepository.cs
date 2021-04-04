@@ -17,8 +17,7 @@ namespace MyMenu.Server.Repository.Item
         }
         public async Task<object> AddUpdateItem(ItemViewModel itemViewModel, string UserName)
         {
-            if (itemViewModel.Id == 0)
-            {
+            
                 MyMenu.Shared.Models.Item item = new MyMenu.Shared.Models.Item();
                 item.Name = itemViewModel.Name;
                 item.Description = itemViewModel.Description;
@@ -36,46 +35,21 @@ namespace MyMenu.Server.Repository.Item
                 await context.SaveChangesAsync();
                 return item;
 
-            }
-            else
-            {
-                var item = await context.Item.FindAsync(itemViewModel.Id);
-                item.Name = itemViewModel.Name;
-                item.Description = itemViewModel.Description;
-                item.ImgUrl = itemViewModel.ImgUrl;
-                item.CategoryId = itemViewModel.CategoryId;
-                item.Price = itemViewModel.Price;
-                item.PriceWithDiscount = itemViewModel.PriceWithDiscount;
-                item.UpdatedAt = DateTime.Now;
-                item.UpdatedBy = UserName;
-                item.IsActive = itemViewModel.IsActive;
-                context.Item.Update(item);
-                await context.SaveChangesAsync();
-                return item;
-            }
-        }
-
-        public async Task<object> DeleteItem(int Id)
-        {
-            var item = await context.Item.FindAsync(Id);
-            if (item != null)
-            {
-                item.IsDelete = true;
-                item.IsActive = false;
-                context.Item.Update(item);
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<object> GetItemById(int Id)
-        {
-            var item = await context.Item.FindAsync(Id);
-            if (item != null)
-            {
-                return item;
-            }
-            return false;
+            
+               //var item = await context.Item.FindAsync(itemViewModel.Id);
+               // item.Name = itemViewModel.Name;
+               // item.Description = itemViewModel.Description;
+               // item.ImgUrl = itemViewModel.ImgUrl;
+               // item.CategoryId = itemViewModel.CategoryId;
+               // item.Price = itemViewModel.Price;
+               // item.PriceWithDiscount = itemViewModel.PriceWithDiscount;
+               // item.UpdatedAt = DateTime.Now;
+               // item.UpdatedBy = UserName;
+               // item.IsActive = itemViewModel.IsActive;
+               // context.Item.Update(item);
+               // await context.SaveChangesAsync();
+               // return item;
+            
         }
         public async Task<object> GetItemByCategoryId(int Id)
         {
@@ -94,6 +68,70 @@ namespace MyMenu.Server.Repository.Item
                 return itemList;
             }
             return false;
+        }
+
+        public async Task<IEnumerable<Shared.Models.Item>> GetAllItemByCompanyId(string companyid)
+        {
+            return await context.Item.Where(x => x.CompanyId == int.Parse(companyid)).ToListAsync();
+        }
+
+        public async Task AddItem(ItemViewModel newitem)
+        {
+            MyMenu.Shared.Models.Item item = new MyMenu.Shared.Models.Item();
+            item.Name = newitem.Name;
+            item.Description = newitem.Description;
+            item.ImgUrl = newitem.ImgUrl;
+            item.CategoryId = newitem.CategoryId;
+            item.CompanyId = newitem.CompanyId;
+            item.Price = newitem.Price;
+            item.PriceWithDiscount = newitem.PriceWithDiscount;
+            item.DiscountId = newitem.DiscountId;
+            item.CreatedAt = DateTime.Now;
+            item.UpdatedAt = DateTime.Now;
+            item.IsActive = newitem.IsActive;
+            item.IsDelete = false;
+            await context.Item.AddAsync(item);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<object> GetItemById(long id)
+        {
+            var item = await context.Item.FindAsync(id);
+            if (item != null)
+            {
+                return item;
+            }
+            return false;
+        }
+
+        public async Task DeleteItem(long id)
+        {
+            var result = await context.Item.FirstOrDefaultAsync(e => e.Id == id);
+            if (result != null)
+            {
+                context.Item.Remove(result);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateItem(ItemViewModel newitem, long id)
+        {
+            var result = await context.Item
+               .FirstOrDefaultAsync(e => e.Id == id);
+            if (result != null)
+            {
+                result.ImgUrl = newitem.ImgUrl;
+                result.Price = newitem.Price;
+                result.PriceWithDiscount = newitem.PriceWithDiscount;
+                result.CategoryId = newitem.CategoryId;
+                result.DiscountId = newitem.DiscountId;
+                result.UpdatedAt = DateTime.Now;
+                result.Name = newitem.Name;
+                result.Description = newitem.Description;
+                result.IsActive = newitem.IsActive;
+                context.Item.Update(result);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

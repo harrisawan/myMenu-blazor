@@ -1,8 +1,8 @@
-﻿@page "/newdiscount"
+﻿@page "/newdiscount/{companyid}"
 @layout AdminLayout
 @inject ISnackbar Snackbar
-@inject IDialogService Dialog
-
+@inject IDiscountDayService discountDayService
+@inject IDiscountService discountService
 <div class="d-flex justify-center py-2 px-1 mt-9 mb-4">
     <MudText Align="Align.Center" Typo="Typo.h4" Color="Color.Primary">
         <b>
@@ -10,52 +10,53 @@
         </b>
     </MudText>
 </div>
-<div class="d-flex justify-center py-2 px-1 mt-4">
+<div class="d-flex justify-center py-2 px-1 mt-4 mx-2">
     <MudGrid>
+        <MudItem sm="12">
+            @{
+                string companyId = "/menuadd/" + CompanyId;
+            }
+            <MudLink Href=@companyId Underline="Underline.Always">Go to Menu</MudLink>
+        </MudItem>
         <MudItem sm="12" md="6">
             <MudPaper Elevation="4" Class="pa-4">
                 <MudGrid>
-                    <MudItem xs="12">
-                        <MudCheckBox T="bool" Color="Color.Primary">
-                            Monday
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudCheckBox T="bool" Color="Color.Primary">
-                            Tuseday
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudCheckBox T="bool" Color="Color.Primary">
-                            Wednesday
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudCheckBox T="bool" Color="Color.Primary">
-                            Thursday
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudCheckBox T="bool" Color="Color.Primary">
-                            Firday
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudCheckBox T="bool" Color="Color.Primary">
-                            Saturday
-                        </MudCheckBox>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudCheckBox T="bool" Color="Color.Primary">
-                            Sunday
-                        </MudCheckBox>
-                    </MudItem>
+                    @if (buttonShow == true)
+                    {
+                        <MudText Typo="Typo.h6" Class="ml-2">
+                            <b>
+                                Selected Days:
+                            </b>
+                        </MudText>
+                        @foreach (var list in weekdays)
+                        {
+
+                            if (CheckedValue.Contains(list.Id))
+                            {
+                                <MudText Class="ml-1 mt-2" Color="Color.Primary">
+                                    <b>@list.Days</b>,
+                                </MudText>
+                            }
+                        }
+                    }
+                    @foreach (var list in weekdays)
+                    {
+                        <MudItem xs="12">
+                            <MudCheckBox T="bool" Color="Color.Primary" CheckedChanged="eventArgs => { CheckboxClicked(list.Id, eventArgs); }">
+                                @list.Days
+                            </MudCheckBox>
+                        </MudItem>
+                    }
+
                 </MudGrid>
             </MudPaper>
         </MudItem>
         <MudItem sm="12" md="6">
             <MudPaper Elevation="4" Class="pa-4">
                 <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="@discountViewModel.Name" Label="Enter an Discount Name" Required="true" RequiredError="Enter an Discount Name" />
+                    </MudItem>
                     <MudItem xs="12">
                         <div class="d-inline"><MudText>From:</MudText></div>
                         <div class="d-inline">
@@ -65,13 +66,13 @@
                     <MudItem xs="12">
                         <div class="d-inline"><MudText>To:</MudText></div>
                         <div class="d-inline">
-                            <MudDatePicker MinDate="@DateTime.Parse(date)" PickerVariant="PickerVariant.Dialog" Label="Date To" Text=@date />
+                            <MudDatePicker MinDate="@DateTime.Parse(date)" PickerVariant="PickerVariant.Dialog" Label="Date To" @bind-Text=@dateTo />
                         </div>
                     </MudItem>
                     <MudItem xs="12">
                         <div class="d-inline"><MudText>From:</MudText></div>
                         <div class="d-inline">
-                            <MudTimePicker @ref="_picker2" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time From">
+                            <MudTimePicker @ref="_picker2" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time From" @bind-Text="@fromtime" Required="true" RequiredError="Enter Time From!">
                                 <PickerActions>
                                     <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker2.Clear())">Clear</MudButton>
                                     <MudButton OnClick="@(() => _picker2.Close(false))">Cancel</MudButton>
@@ -83,7 +84,7 @@
                     <MudItem xs="12">
                         <div class="d-inline"><MudText>To:</MudText></div>
                         <div class="d-inline">
-                            <MudTimePicker @ref="_picker3" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time To">
+                            <MudTimePicker @ref="_picker3" InputIcon="@Icons.Material.Filled.AccessTime" Label="Time To" @bind-Text="@totime" Required="true" RequiredError="Enter Time To!">
                                 <PickerActions>
                                     <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker3.Clear())">Clear</MudButton>
                                     <MudButton OnClick="@(() => _picker3.Close(false))">Cancel</MudButton>
@@ -93,79 +94,101 @@
                         </div>
                     </MudItem>
                     <MudItem xs="12">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Add Discount</MudButton>
+                        @if (buttonShow == false)
+                        {
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddDiscountRecord">Add Discount</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="EditDiscountRecord">Edit Discount</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ResetForm">Reset</MudButton>
+                        }
                     </MudItem>
                 </MudGrid>
             </MudPaper>
         </MudItem>
     </MudGrid>
 </div>
-<MudTable Items="@Companies" Dense="@dense" Hover="@hover" ReadOnly="@ronly" Filter="new Func<Company,bool>(FilterFunc)" @bind-SelectedItem="selectedItem" SortLabel="Sort By" CommitEditTooltip="Commit Edit" OnCommitEditClick="@(() => Snackbar.Add("Commit Edit Handler Invoked"))">
+<MudTable Items="@discountList" Dense="true" Hover="true" Filter="new Func<DiscountPeriods, bool>(FilterFunc)" SortLabel="Sort By" @bind-SelectedItem="selectedItem">
     <ToolBarContent>
         <MudText Typo="Typo.h5" Color="Color.Primary">DISCOUNT LIST</MudText>
         <MudToolBarSpacer />
         <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <ColGroup>
-        <col style="width:10%;" />
-        <col style="width:20%" />
-        <col style="width:50%;" />
-        <col style="width:20%;" />
+        <col style="width:14%" />
+        <col style="width:14%" />
+        <col style="width:14%" />
+        <col style="width:14%" />
+        <col style="width:14%" />
+        <col style="width:14%" />
+        <col style="width:16%" />
     </ColGroup>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<Company, object>(x=>x.Id)">Company Id</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Company, object>(x=>x.Name)">Company Name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<Company, object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DiscountPeriods, object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DiscountPeriods, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DiscountPeriods, object>(x=>x.FromDate)">From Date</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DiscountPeriods, object>(x=>x.ToDate)">To Date</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DiscountPeriods, object>(x=>x.FromTime)">From Time</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DiscountPeriods, object>(x=>x.ToTime)">To Time</MudTableSortLabel></MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nr">@context.Id</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Description">@context.Description</MudTd>
-        <MudTd DataLabel="Molar mass"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+        <MudTd DataLabel="From Date">
+            @context.FromDate.ToString("yyyy-MM-dd")
+        </MudTd>
+        <MudTd DataLabel="To Date">
+            @context.ToDate.ToString("yyyy-MM-dd")
+        </MudTd>
+        <MudTd DataLabel="From Time">
+            @context.FromTime.ToString("hh:mm tt")
+        </MudTd>
+        <MudTd DataLabel="To Time">
+            @context.ToTime.ToString("hh:mm tt")
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" OnClick="GetEditRecord" Class="ma-2"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" OnClick="DeleteDiscountHandler" Class="ma-2"></MudIconButton>
+        </MudTd>
     </RowTemplate>
-    @*<RowEditingTemplate>
-            <MudTd DataLabel="Nr">@context.Number</MudTd>
-            <MudTd DataLabel="Sign">
-                <MudTextField @bind-Value="@context.Sign" Required />
-            </MudTd>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" Required />
-            </MudTd>
-            <MudTd DataLabel="Position">
-                <MudTextField @bind-Value="@context.Position" Required />
-            </MudTd>
-            <MudTd DataLabel="Molar mass">
-                <MudTextField @bind-Value="@context.Molar" Required />
-            </MudTd>
-        </RowEditingTemplate>*@
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
 </MudTable>
 
-
 @code {
+    [Parameter]
+    public string CompanyId { get; set; }
+    private List<DaysOfWeek> weekdays { get; set; } = new List<DaysOfWeek>();
+    private DaysOfWeek days { get; set; } = new DaysOfWeek();
+    private List<DiscountPeriods> discountList { get; set; } = new List<DiscountPeriods>();
+    private List<DiscountTransaction> discounttransactionList { get; set; } = new List<DiscountTransaction>();
+    private DiscountViewModel discountViewModel { get; set; } = new DiscountViewModel();
+    bool buttonShow = false;
     MudTimePicker _picker;
     MudTimePicker _picker1;
     MudTimePicker _picker2;
     MudTimePicker _picker3;
-    string date = DateTime.Now.ToString("yyyy-MM-dd");
+    private string date = DateTime.Now.ToString("yyyy-MM-dd");
+    private string dateTo = DateTime.Now.ToString("yyyy-MM-dd");
+    string fromtime = null;
+    string totime = null;
+    string displaytimefrom = null;
     TimeSpan? time = new TimeSpan(00, 45, 00);
+    bool Checked = false;
+
+    public List<int> CheckedValue { get; set; } = new List<int>();
 
 
-    private List<Company> Companies = new List<Company>()
-{
-        new Company(){ Id = 1, Name="Company A",Description="Company A Description"},
-                new Company(){ Id = 2, Name="Company B",Description="Company B Description"},
-                new Company(){ Id = 3, Name="Company c",Description="Company C Description"},
-                new Company(){ Id = 4, Name="Company d",Description="Company D Description"}
-    };
+    protected override async Task OnInitializedAsync()
+    {
+        weekdays = (await discountDayService.GetAllDays()).ToList();
+        discountList = (await discountService.GetAllDiscountByCompanyId(CompanyId)).ToList();
+    }
     private bool dense = false;
     private bool hover = true;
     private bool ronly = false;
     private string searchString = "";
-    private Company selectedItem = null;
+    private DiscountPeriods selectedItem = null;
 
     // Dialog Box
     private bool visible;
@@ -178,14 +201,116 @@
 
 
 
-    private bool FilterFunc(Company company)
+    private bool FilterFunc(DiscountPeriods discount)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if (company.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (discount.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        //if ($"{element.Number} {element.Position} {element.Molar}".Contains(searchString))
-        //    return true;
         return false;
+    }
+    void CheckboxClicked(int CheckID, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!CheckedValue.Contains(CheckID))
+            {
+                CheckedValue.Add(CheckID);
+            }
+        }
+        else
+        {
+            if (CheckedValue.Contains(CheckID))
+            {
+                CheckedValue.Remove(CheckID);
+            }
+        }
+    }
+    public async Task AddDiscountRecord()
+    {
+        selectedItem = null;
+        discountViewModel.FromDate = Convert.ToDateTime(date);
+        discountViewModel.ToDate = Convert.ToDateTime(dateTo);
+        discountViewModel.FromTime = Convert.ToDateTime(fromtime);
+        discountViewModel.ToTime = Convert.ToDateTime(totime);
+        discountViewModel.CompanyId = int.Parse(CompanyId);
+
+        if (CheckedValue != null)
+        {
+            foreach (var list in CheckedValue)
+            {
+                discountViewModel.DaysIdList.Add(list);
+            }
+        }
+        await discountService.AddNewDiscount(discountViewModel);
+        Snackbar.Add("Discount added successfully");
+        discountList = (await discountService.GetAllDiscountByCompanyId(CompanyId)).ToList();
+    }
+    public void ResetForm()
+    {
+        buttonShow = false;
+        selectedItem = null;
+        date = DateTime.Now.ToString("yyyy-MM-dd");
+        dateTo = date;
+        fromtime = DateTime.Now.ToString("hh:mm tt");
+        totime = DateTime.Now.ToString("hh:mm tt");
+        discountViewModel.Name = null;
+        CheckedValue = new List<int>();
+    }
+    private async Task GetEditRecord()
+    {
+
+        if (selectedItem != null)
+        {
+            buttonShow = true;
+            var result = await discountService.GetDiscountById(selectedItem.Id);
+            discounttransactionList = (await discountService.GetDiscountTransactionByDiscountId(selectedItem.Id)).ToList();
+            discountViewModel = new DiscountViewModel();
+            discountViewModel.Name = result.Name;
+            date = result.FromDate.ToString("yyyy-MM-dd");
+            dateTo = result.FromDate.ToString("yyyy-MM-dd");
+            fromtime = result.FromTime.ToString("hh:mm tt");
+            totime = result.ToTime.ToString("hh:mm tt");
+            @foreach (var list in discounttransactionList)
+            {
+                CheckedValue.Add(list.DayId);
+            }
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    public async Task EditDiscountRecord()
+    {
+        discountViewModel.CompanyId = int.Parse(CompanyId);
+        discountViewModel.FromDate = DateTime.Parse(date);
+        discountViewModel.ToDate = DateTime.Parse(dateTo);
+        discountViewModel.FromTime = DateTime.Parse(fromtime);
+        discountViewModel.ToTime = DateTime.Parse(totime);
+        if (CheckedValue != null)
+        {
+            foreach (var list in CheckedValue)
+            {
+                discountViewModel.DaysIdList.Add(list);
+            }
+        }
+        await discountService.UpdateDiscount(discountViewModel, selectedItem.Id);
+        Snackbar.Add("Discount Updated successfully");
+        discountList = (await discountService.GetAllDiscountByCompanyId(CompanyId)).ToList();
+    }
+
+    public async Task DeleteDiscountHandler()
+    {
+        if (selectedItem != null)
+        {
+            await discountService.DeleteDiscount(selectedItem.Id);
+            Snackbar.Add("Record Deleted");
+            discountList = (await discountService.GetAllDiscountByCompanyId(CompanyId)).ToList();
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
     }
 }

@@ -76,29 +76,113 @@ using MyMenu.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 10 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Companies;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 11 "D:\new project\MyMenu\Client\_Imports.razor"
-using MudBlazor;
+using MyMenu.Client.Services.Menus;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 12 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.Text.RegularExpressions;
+using MyMenu.Client.Services.Categories;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 13 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.ComponentModel.DataAnnotations;
+using MyMenu.Client.Services.Items;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 14 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Discounts;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "D:\new project\MyMenu\Client\_Imports.razor"
+using MudBlazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 17 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.Text.RegularExpressions;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 18 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.IO;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 20 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Shared.ViewModels;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 21 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Auth;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 22 "D:\new project\MyMenu\Client\_Imports.razor"
 using MyMenu.Shared.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 23 "D:\new project\MyMenu\Client\_Imports.razor"
+using Microsoft.AspNetCore.Components.Authorization;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 24 "D:\new project\MyMenu\Client\_Imports.razor"
+using Blazored.LocalStorage;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 25 "D:\new project\MyMenu\Client\_Imports.razor"
+using BlazorInputFile;
 
 #line default
 #line hidden
@@ -113,33 +197,36 @@ using MyMenu.Shared.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 41 "D:\new project\MyMenu\Client\Pages\Login.razor"
+#line 53 "D:\new project\MyMenu\Client\Pages\Login.razor"
        
     bool success;
     string[] errors = { };
-    MudTextField<string> pwField1;
-    MudForm form;
-    private IEnumerable<string> PasswordStrength(string pw)
+    private bool ShowErrors;
+    private string Error = "";
+    LoginViewModel loginViewModel = new LoginViewModel();
+    private async Task HandleLogin()
     {
-        if (string.IsNullOrWhiteSpace(pw))
+        ShowErrors = false;
+
+        var result = await AuthService.Login(loginViewModel);
+
+        if (result.Successful)
         {
-            yield return "Password is required!";
-            yield break;
+            NavigationManager.NavigateTo($"/adminhome/{result.UserId}", forceLoad: true);
         }
-        if (pw.Length < 8)
-            yield return "Password must be at least of length 8";
-        if (!Regex.IsMatch(pw, @"[A-Z]"))
-            yield return "Password must contain at least one capital letter";
-        if (!Regex.IsMatch(pw, @"[a-z]"))
-            yield return "Password must contain at least one lowercase letter";
-        if (!Regex.IsMatch(pw, @"[0-9]"))
-            yield return "Password must contain at least one digit";
+        else
+        {
+            Error = result.Error;
+            ShowErrors = true;
+        }
     }
 
 
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IAuthService AuthService { get; set; }
     }
 }
 #pragma warning restore 1591

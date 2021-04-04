@@ -8,74 +8,18 @@ using MyMenu.Shared.ViewModels;
 
 namespace MyMenu.Server.Repository.Category
 {
-    public class CategoryRepository: ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
-       
-        private MyMenuDbContext db;
+
+        private MyMenuDbContext context;
         public CategoryRepository(MyMenuDbContext context)
         {
-            this.db = context;
+            this.context = context;
         }
-        public async Task<object> AddUpdateCategory(CategoryViewModel Category, string UserName)
-        {
-
-            if (Category.Id ==0)
-            {
-
-                db.Category.Add(new Shared.Models.Category
-                {
-                    CreatedAt = DateTime.Now,
-                    MenuId = Category.MenuId,
-                    Description = Category.Description,
-                    IsDelete = false,
-                    IsActive=true,
-                    UpdatedAt = DateTime.Now,
-                    Name = Category.Name
-                   
-                });
-                await db.SaveChangesAsync();
-                return Category;
-            }
-            else
-            {
-                var categoryExist = db.Category.Where(x => x.Id == Category.Id).FirstOrDefault();
-                if (categoryExist != null)
-                {
-                    categoryExist.UpdatedAt = DateTime.Now;
-                    categoryExist.Name = Category.Name;
-                    categoryExist.Description = Category.Description;
-                    categoryExist.IsActive = Category.IsActive;
-                    categoryExist.MenuId = Category.MenuId;
-                    await db.SaveChangesAsync();
-                    return categoryExist;
-                }
-                else
-                {
-                    return "";
-                }
-            }
-        }
-
-        public async Task<object> DeleteCategory(int Id)
-        {
-           
-            var accountgrp = db.Category.Where(x => x.Id == Id).FirstOrDefault();
-            if (accountgrp != null)
-            {
-                accountgrp.IsDelete = true;
-                accountgrp.UpdatedAt = DateTime.Now;
-                await db.SaveChangesAsync();
-                return accountgrp;
-               // return Objectserializer.Serilized("Deleted", 200);
-            }
-            else
-            {
-                return "";
-            }
-        }
+        
         public async Task<object> GetCategoryById(int Id)
         {
-            var menu = await db.Category.FindAsync(Id);
+            var menu = await context.Category.FindAsync(Id);
             if (menu != null)
             {
                 return menu;
@@ -84,22 +28,77 @@ namespace MyMenu.Server.Repository.Category
         }
         public async Task<object> GetAllCategory()
         {
-            var menu = await db.Category.Where(x=>x.IsDelete==false).ToListAsync();
+            var menu = await context.Category.Where(x => x.IsDelete == false).ToListAsync();
             if (menu != null)
             {
                 return menu;
             }
             return false;
         }
-        public async Task<object> GetCategoryByMenuId(int Id)
+        public async Task<object> GetCategoryByMenuId(int id)
         {
-            var category = await db.Category.Where(x => x.MenuId == Id && x.IsDelete==false).FirstOrDefaultAsync();
+            var category = await context.Category.FindAsync(id);
             if (category != null)
             {
                 return category;
             }
             return false;
         }
-     
+
+        public async Task<IEnumerable<Shared.Models.Category>> GetAllCategoryByCompanyId(string companyid)
+        {
+            return await context.Category.Where(x => x.CompanyId == int.Parse(companyid)).ToListAsync();
+        }
+
+        public async Task<Shared.Models.Category> AddCategory(CategoryViewModel newcategory)
+        {
+            MyMenu.Shared.Models.Category category = new MyMenu.Shared.Models.Category();
+            category.CreatedAt = DateTime.Now;
+            category.MenuId = newcategory.MenuId;
+            category.Description = newcategory.Description;
+            category.IsDelete = false;
+            category.IsActive = newcategory.IsActive;
+            category.UpdatedAt = DateTime.Now;
+            category.Name = newcategory.Name;
+            category.CompanyId = newcategory.CompanyId;
+            await context.Category.AddAsync(category);
+            await context.SaveChangesAsync();
+            return category;
+        }
+
+        public async Task<Shared.Models.Category> UpdateCategory(CategoryViewModel newcategory, int id)
+        {
+            var result = await context.Category
+               .FirstOrDefaultAsync(e => e.Id == id);
+            if (result != null)
+            {
+                result.UpdatedAt = DateTime.Now;
+                result.Name = newcategory.Name;
+                result.Description = newcategory.Description;
+                result.IsActive = newcategory.IsActive;
+                await context.SaveChangesAsync();
+                return result;
+            }
+            return null;
+        }
+
+        public async Task<Shared.Models.Category> DeleteCategory(int id)
+        {
+            var result = await context.Category.FirstOrDefaultAsync(e => e.Id == id);
+            var result2 = await context.Item.Where(x => x.CategoryId == id).ToListAsync();
+            if (result2 != null)
+            {
+                context.Item.RemoveRange(result2);
+                await context.SaveChangesAsync();
+            }
+            if (result != null)
+            {
+                context.Category.Remove(result);
+                await context.SaveChangesAsync();
+                return result;
+            }
+
+            return null;
+        }
     }
 }

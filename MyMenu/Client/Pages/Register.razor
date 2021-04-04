@@ -1,53 +1,86 @@
 ﻿@page "/register"
 @layout LoginLayout
+@inject IAuthService authService
+@inject NavigationManager NavigationManager
+
 <link href="css/responsive-full-background-image.css" rel="stylesheet" />
 <div class="container">
     <div class="content">
-
         <div Class="d-flex justify-space-between py-2 px-1 mt-6" Elevation="0">
-            <div class="" mx-2" Elevation="0"></div>
-            <MudPaper Class="px-2 d-flex mx-2 mud-elevation-22">
-                <div style="max-width: 400px;">
-                    <MudCard Elevation="0" Class="py-2">
+            <div class="mx-2" Elevation="0"></div>
+            <MudPaper Class="px-2 d-flex mx-2 mud-elevation-14">
+                <div id="loginformsize" style="width:380px;">
+                    <MudCard>
                         <MudCardContent>
-                            <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary"><b>Create Account</b></MudText>
+                            <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-2"><b>Create Account</b></MudText>
                             @foreach (var error in errors)
                             {
-                                <MudAlert Severity="Severity.Error" NoIcon="false">@error</MudAlert>
+                                <MudText Color="@Color.Error">@error</MudText>
                             }
-
                             <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-                                <MudTextField T="string" Label="Username" Required="true" RequiredError="User name is required!" />
-                                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                                <MudTextField T="string" Label="First Name" Required="true" @bind-Value="registerViewModel.FirstName" RequiredError="First name is required!" />
+                                <MudTextField T="string" Label="Last Name" Required="true" @bind-Value="registerViewModel.LastName" RequiredError="Last name is required!" />
+                                <MudTextField T="string" Label="Email" @bind-Value="registerViewModel.Email" Required="true" RequiredError="Email is required!"
                                               Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
-                                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                                <MudTextField T="string" Label="Password" @bind-Value="registerViewModel.Password" HelperText="Choose a strong password" @ref="pwField1"
                                               InputType="InputType.Password"
                                               Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                                               RequiredError="Password is required!" />
                                 <MudTextField T="string"
-                                              Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
+                                              Label="Confirm Password" @bind-Value="registerViewModel.ConfirmPassword" Required="true" RequiredError="Confirm Password is required!" HelperText="Repeat the password" InputType="InputType.Password"
                                               Validation="@(new Func<string, string>(PasswordMatch))" />
-                                <MudCheckBox T="bool" Required="true" RequiredError="You must agree the Terms & Policies" Class="ml-n2" Color="Color.Primary">
-                                    I accept the <MudLink Href="#" Underline="Underline.Always">Terms of Use</MudLink> & <MudLink Href="#" Underline="Underline.Always">Privacy Policy</MudLink>
-
-                                </MudCheckBox>
                             </MudForm>
                         </MudCardContent>
                         <MudCardActions>
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="HandleRegistration" Class="ml-auto">Register</MudButton>
                         </MudCardActions>
-                        <MudText Align="Align.Center" Class="pb-2 pt-1"> Already have an Account <MudLink Href="/login" Underline="Underline.Always"><b>Login</b></MudLink></MudText>
+                        <MudText Align="Align.Center" Class="pb-4 pt-1"> Already have an Account <MudLink Href="/login" Underline="Underline.Always"><b>Login</b></MudLink></MudText>
                     </MudCard>
-                </div>
+                    @*<EditForm Model="@registerViewModel" OnValidSubmit="HandleRegistration">
+            <DataAnnotationsValidator />
+            <MudCard Elevation="0" Class="py-2">
+                <MudCardContent>
+                    <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-2"><b>Create Account</b></MudText>
+                    @if (ShowErrors == true)
+                    {
+                        <MudAlert Severity="Severity.Error" NoIcon="false">@Errors</MudAlert>
+                    }
+                    @if (success)
+                    {
+                        <MudText Color="Color.Success">Success</MudText>
+                    }
+                    else
+                    {
+                        <MudText Color="@Color.Error">
+                            <ValidationSummary />
+                        </MudText>
+                    }
+                    <MudTextField Label="First Name"
+                                  @bind-Value="registerViewModel.FirstName" For="@(() => registerViewModel.FirstName)" />
+                    <MudTextField Label="Last Name"
+                                  @bind-Value="registerViewModel.LastName" For="@(() => registerViewModel.LastName)" />
+                    <MudTextField Label="Email" Class="mt-3"
+                                  @bind-Value="registerViewModel.Email" For="@(() => registerViewModel.Email)" />
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                                  @bind-Value="registerViewModel.Password" For="@(() => registerViewModel.Password)" InputType="InputType.Password" />
+                    <MudTextField Label="Password" HelperText="Repeat the password" Class="mt-3"
+                                  @bind-Value="registerViewModel.ConfirmPassword" For="@(() => registerViewModel.ConfirmPassword)" InputType="InputType.Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                </MudCardActions>
+                <MudText Align="Align.Center" Class="pb-2 pt-1"> Already have an Account <MudLink Href="/login" Underline="Underline.Always"><b>Login</b></MudLink></MudText>
 
+            </MudCard>
+        </EditForm>*@
+                </div>
             </MudPaper>
-            <div class="" mx-2" Elevation="0"></div>
+            <div class="mx-2" Elevation="0"></div>
         </div>
     </div>
 </div>
 
 @code {
-
 
     bool success;
     string[] errors = { };
@@ -77,5 +110,23 @@
             return "Passwords don't match";
         return null;
     }
+    RegisterViewModel registerViewModel = new RegisterViewModel();
+    private bool ShowErrors;
+    private string Errors;
+    private async Task HandleRegistration()
+    {
+        ShowErrors = false;
 
+        var result = await authService.Register(registerViewModel);
+
+        if (result.Successful)
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            Errors = result.Errors;
+            ShowErrors = true;
+        }
+    }
 }

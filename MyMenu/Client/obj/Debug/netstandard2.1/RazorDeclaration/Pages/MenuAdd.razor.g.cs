@@ -76,35 +76,126 @@ using MyMenu.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 10 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Companies;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 11 "D:\new project\MyMenu\Client\_Imports.razor"
-using MudBlazor;
+using MyMenu.Client.Services.Menus;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 12 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.Text.RegularExpressions;
+using MyMenu.Client.Services.Categories;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 13 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.ComponentModel.DataAnnotations;
+using MyMenu.Client.Services.Items;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 14 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Discounts;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "D:\new project\MyMenu\Client\_Imports.razor"
+using MudBlazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 17 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.Text.RegularExpressions;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 18 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.IO;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 20 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Shared.ViewModels;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 21 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Auth;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 22 "D:\new project\MyMenu\Client\_Imports.razor"
 using MyMenu.Shared.Models;
 
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 23 "D:\new project\MyMenu\Client\_Imports.razor"
+using Microsoft.AspNetCore.Components.Authorization;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 24 "D:\new project\MyMenu\Client\_Imports.razor"
+using Blazored.LocalStorage;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 25 "D:\new project\MyMenu\Client\_Imports.razor"
+using BlazorInputFile;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 10 "D:\new project\MyMenu\Client\Pages\MenuAdd.razor"
+using MudBlazor.Services;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.LayoutAttribute(typeof(AdminLayout))]
-    [Microsoft.AspNetCore.Components.RouteAttribute("/menuadd")]
+    [Microsoft.AspNetCore.Components.RouteAttribute("/menuadd/{companyid}")]
     public partial class MenuAdd : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
@@ -113,39 +204,49 @@ using MyMenu.Shared.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 258 "D:\new project\MyMenu\Client\Pages\MenuAdd.razor"
+#line 357 "D:\new project\MyMenu\Client\Pages\MenuAdd.razor"
        
-    List<Menu> menuList = new List<Menu>()
-{
-        new Menu{Id=1, Name="Menu 1", Description="Menu 1 Description"},
-        new Menu{Id=2, Name="Menu 2", Description="Menu 2 Description"},
-        new Menu{Id=3, Name="Menu 3", Description="Menu 3 Description"},
-        new Menu{Id=4, Name="Menu 4", Description="Menu 4 Description"},
-        new Menu{Id=5, Name="Menu 5", Description="Menu 5 Description"}
-    };
-    List<Category> categoryList = new List<Category>()
-{
-        new Category{Id=1, Name="Category 1", Description="Category 1 Description"},
-        new Category{Id=2, Name="Category 2", Description="Category 2 Description"},
-        new Category{Id=3, Name="Category 3", Description="Category 3 Description"},
-        new Category{Id=4, Name="Category 4", Description="Category 4 Description"},
-        new Category{Id=5, Name="Category 5", Description="Category 5 Description"}
-    };
-    List<Item> itemList = new List<Item>()
-{
-        new Item{Id=1, Name="Item 1", Description="Item 1 Description"},
-        new Item{Id=2, Name="Item 2", Description="Item 2 Description"},
-        new Item{Id=3, Name="Item 3", Description="Item 3 Description"},
-        new Item{Id=4, Name="Item 4", Description="Item 4 Description"},
-        new Item{Id=5, Name="Item 5", Description="Item 5 Description"}
-    };
+    [Parameter]
+    public string CompanyId { get; set; }
+    [CascadingParameter]
+    public AdminLayout Layout { get; set; }
+    private List<Menu> menusList { get; set; } = new List<Menu>();
+    private List<Category> categoryList { get; set; } = new List<Category>();
+    private List<Item> itemList { get; set; } = new List<Item>();
+    private List<DiscountPeriods> discountList { get; set; } = new List<DiscountPeriods>();
+    private MenuViewModel menuViewModel { get; set; } = new MenuViewModel();
+    private CategoryViewModel categoryViewModel { get; set; } = new CategoryViewModel();
+    private ItemViewModel itemViewModel { get; set; } = new ItemViewModel();
+    string status;
+    string discounturl;
+    public byte[] imageUploaded { get; set; }
+    public string Menudropdownvalue { get; set; }
+    public string Categorydropdownvalue { get; set; }
+    public string Discountdropdownvalue { get; set; }
+    private IFileListEntry file { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+        itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        discountList = (await discountService.GetAllDiscountByCompanyId(CompanyId)).ToList();
+        menuViewModel.IsActive = false;
+        categoryViewModel.IsActive = false;
+        itemViewModel.IsActive = false;
+        Layout.Cid = CompanyId;
+        myService.CallRequestRefresh();
+    }
+
     private bool dense = false;
     private bool hover = true;
     private bool ronly = false;
+    private Menu menuselectedItem = null;
+    private Category categoryselectedItem = null;
+    private Item itemselectedItem = null;
     private string menusearchString = "";
     private string categorysearchString = "";
     private string itemsearchString = "";
-    private Company selectedItem = null;
 
     // Dialog Box
     private bool menuDialogVisible;
@@ -154,18 +255,26 @@ using MyMenu.Shared.Models;
     private int rating;
     private void MenuOpenDialog()
     {
+        menuselectedItem = null;
+        menuViewModel = new MenuViewModel();
         menuDialogVisible = true;
     }
     void MenuDialogClose() => menuDialogVisible = false;
 
     private void CategoryOpenDialog()
     {
+        categoryselectedItem = null;
+        categoryViewModel = new CategoryViewModel();
+        Menudropdownvalue = null;
         categoryDialogVisible = true;
     }
     void CategoryDialogClose() => categoryDialogVisible = false;
 
     private void ItemOpenDialog()
     {
+        itemViewModel = new ItemViewModel();
+        Categorydropdownvalue = null;
+        Discountdropdownvalue = null;
         itemDialogVisible = true;
     }
     void ItemDialogClose() => itemDialogVisible = false;
@@ -181,19 +290,19 @@ using MyMenu.Shared.Models;
             return true;
         return false;
     }
-    private bool FilterFunc(Category c)
+    private bool CategoryFilterFunc(Category c)
     {
-        if (string.IsNullOrWhiteSpace(menusearchString))
+        if (string.IsNullOrWhiteSpace(categorysearchString))
             return true;
-        if (c.Name.Contains(menusearchString, StringComparison.OrdinalIgnoreCase))
+        if (c.Name.Contains(categorysearchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
     }
-    private bool FilterFunc(Item i)
+    private bool ItemFilterFunc(Item i)
     {
-        if (string.IsNullOrWhiteSpace(menusearchString))
+        if (string.IsNullOrWhiteSpace(itemsearchString))
             return true;
-        if (i.Name.Contains(menusearchString, StringComparison.OrdinalIgnoreCase))
+        if (i.Name.Contains(itemsearchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
     }
@@ -202,9 +311,250 @@ using MyMenu.Shared.Models;
         tabs.ActivatePanel(index);
     }
 
+
+
+
+    //add
+    private async void AddNewMenuHandler()
+    {
+        menuViewModel.CompanyId = int.Parse(CompanyId);
+        menuViewModel.ImgUrl = imageUploaded;
+        var res = (await menuService.AddNewMenu(menuViewModel));
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Menu added successfully");
+    }
+    private async void AddNewCategoryHandler()
+    {
+        categoryViewModel.CompanyId = int.Parse(CompanyId);
+        categoryViewModel.MenuId = int.Parse(Menudropdownvalue);
+        var res = (await categoryService.AddNewCategory(categoryViewModel));
+        categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Category added successfully");
+    }
+    private async void AddNewItemHandler()
+    {
+        itemViewModel.CompanyId = int.Parse(CompanyId);
+        itemViewModel.CategoryId = int.Parse(Categorydropdownvalue);
+        itemViewModel.DiscountId = int.Parse(Discountdropdownvalue);
+        itemViewModel.ImgUrl = imageUploaded;
+        await itemService.AddNewItem(itemViewModel);
+        itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Item added successfully");
+    }
+
+
+    //image
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+        if (file != null)
+        {
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            status = $"Finished loading {file.Size} bytes from {file.Name}";
+            imageUploaded = ms.ToArray();
+        }
+    }
+    private string ConvertImageToDisplay(byte[] image)
+    {
+        if (image != null)
+        {
+            var base64 = Convert.ToBase64String(image);
+            var fs = string.Format("data:image/jgp;base64,{0}", base64);
+            return fs;
+        }
+        return "";
+    }
+
+
+
+
+    //delete
+    public async Task DeleteMenuHandler()
+    {
+        if (menuselectedItem != null)
+        {
+            await menuService.DeleteMenu(menuselectedItem.Id);
+            Snackbar.Add("Record Deleted");
+            menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+            categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+            itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    public async Task DeleteCategoryHandler()
+    {
+        if (categoryselectedItem != null)
+        {
+            await categoryService.DeleteCategory(categoryselectedItem.Id);
+            categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+            itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+            Snackbar.Add("Record Deleted");
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    public async Task DeleteItemHandler()
+    {
+        if (itemselectedItem != null)
+        {
+            await itemService.DeleteItem(itemselectedItem.Id);
+            Snackbar.Add("Record Deleted");
+            itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+
+
+
+    //Edit Dialog
+    private async Task OpenEditDialog()
+    {
+        if (menuselectedItem != null)
+        {
+            var result = await menuService.GetMenuById(menuselectedItem.Id);
+            menuViewModel = new MenuViewModel();
+            menuViewModel.Name = result.Name;
+            menuViewModel.Description = result.Description;
+            imageUploaded = result.ImgUrl;
+            menuViewModel.IsActive = result.IsActive;
+            menuDialogVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    private async Task OpenCategoryEditDialog()
+    {
+        if (categoryselectedItem != null)
+        {
+            var result = await categoryService.GetCategoryById(categoryselectedItem.Id);
+            categoryViewModel = new CategoryViewModel();
+            categoryViewModel.Name = result.Name;
+            Menudropdownvalue = result.MenuId.ToString();
+            categoryViewModel.Description = result.Description;
+            categoryViewModel.IsActive = result.IsActive;
+            categoryDialogVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+    private async Task OpenItemEditDialog()
+    {
+        if (itemselectedItem != null)
+        {
+            var result = await itemService.GetItemById(itemselectedItem.Id);
+            itemViewModel = new ItemViewModel();
+            itemViewModel.Name = result.Name;
+            Categorydropdownvalue = result.CategoryId.ToString();
+            Discountdropdownvalue = result.DiscountId.ToString();
+            itemViewModel.Description = result.Description;
+            imageUploaded = result.ImgUrl;
+            itemViewModel.IsActive = result.IsActive;
+            itemViewModel.Price = result.Price;
+            itemViewModel.PriceWithDiscount = result.PriceWithDiscount;
+            itemDialogVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
+
+
+
+    //Edit
+    private async void UpdateMenuHandler()
+    {
+        menuViewModel.CompanyId = int.Parse(CompanyId);
+        if (imageUploaded != null)
+        {
+            menuViewModel.ImgUrl = imageUploaded;
+        }
+        var res = (await menuService.UpdateMenu(menuViewModel, menuselectedItem.Id));
+        menusList = (await menuService.GetAllMenuByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Menu Updated successfully");
+    }
+    private async void UpdateCategoryHandler()
+    {
+        categoryViewModel.CompanyId = int.Parse(CompanyId);
+        categoryViewModel.MenuId = int.Parse(Menudropdownvalue);
+        var res = (await categoryService.UpdateCategory(categoryViewModel, categoryselectedItem.Id));
+        categoryList = (await categoryService.GetAllCategoryByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Category Updated successfully");
+    }
+    private async void UpdateItemHandler()
+    {
+        itemViewModel.CompanyId = int.Parse(CompanyId);
+        itemViewModel.CategoryId = int.Parse(Categorydropdownvalue);
+        itemViewModel.DiscountId = int.Parse(Discountdropdownvalue);
+        if (imageUploaded != null)
+        {
+            itemViewModel.ImgUrl = imageUploaded;
+        }
+        await itemService.UpdateItem(itemViewModel, itemselectedItem.Id);
+        itemList = (await itemService.GetAllItemByCompanyId(CompanyId)).ToList();
+        Snackbar.Add("Item Updated successfully");
+    }
+
+
+
+    private void ResetMenuForm()
+    {
+        status = "";
+        file = null;
+        imageUploaded = null;
+        menuViewModel.Name = null;
+        menuViewModel.Description = null;
+        menuViewModel.IsActive = false;
+        menuselectedItem = null;
+        menuViewModel = new MenuViewModel();
+    }
+    private void ResetCategoryForm()
+    {
+        Menudropdownvalue = null;
+        categoryViewModel.Name = null;
+        categoryViewModel.Description = null;
+        categoryViewModel.IsActive = false;
+        categoryselectedItem = null;
+        categoryViewModel = new CategoryViewModel();
+    }
+    private void ResetItemForm()
+    {
+        status = "";
+        file = null;
+        imageUploaded = null;
+        itemViewModel.Name = null;
+        itemViewModel.Description = null;
+        itemViewModel.IsActive = false;
+        Discountdropdownvalue = null;
+        itemViewModel.Price = 0.0M;
+        itemViewModel.PriceWithDiscount = 0.0M;
+        itemselectedItem = null;
+        Categorydropdownvalue = null;
+        itemViewModel = new ItemViewModel();
+    }
+
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IMyService myService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private ICategoryService categoryService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IDiscountService discountService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IItemService itemService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IMenuService menuService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IDialogService Dialog { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private ISnackbar Snackbar { get; set; }
     }

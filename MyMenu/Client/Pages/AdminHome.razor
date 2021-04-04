@@ -1,19 +1,25 @@
-﻿@page "/adminHome"
+﻿@page "/adminhome/{userid}"
 @layout AdminLayout
 @inject ISnackbar Snackbar
 @inject IDialogService Dialog
-
-@if (Companies == null)
-{
-}
-else
-{
-    <MudContainer Class="mt-9">
-        <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
-            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@OpenDialog">New Company</MudButton>
-        </MudPaper>
+@inject ICompanyService companyService
+@inject IMyService myService
+@using MudBlazor.Services
 
 
+<MudContainer Class="mt-9">
+    <MudPaper Class="d-flex justify-end py-2 px-1 mt-6" Elevation="0">
+        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="@OpenDialog">New Company</MudButton>
+    </MudPaper>
+
+    @if (Companies == null)
+    {
+        <div class="d-flex justify-center py-2 px-1">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        </div>
+    }
+    else
+    {
         <MudTable Items="@Companies" Dense="@dense" Hover="@hover" ReadOnly="@ronly" Filter="new Func<Company,bool>(FilterFunc)" @bind-SelectedItem="selectedItem" SortLabel="Sort By" CommitEditTooltip="Commit Edit" OnCommitEditClick="@(() => Snackbar.Add("Commit Edit Handler Invoked"))">
             <ToolBarContent>
                 <MudText Typo="Typo.h5" Color="Color.Primary">COMPANIES LIST</MudText>
@@ -22,123 +28,242 @@ else
             </ToolBarContent>
             <ColGroup>
                 <col style="width:10%;" />
+                <col style="width:10%;" />
                 <col style="width:20%" />
-                <col style="width:50%;" />
+                <col style="width:40%;" />
                 <col style="width:20%;" />
             </ColGroup>
             <HeaderContent>
                 <MudTh><MudTableSortLabel SortBy="new Func<Company, object>(x=>x.Id)">Company Id</MudTableSortLabel></MudTh>
+                <MudTh>Logo</MudTh>
                 <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Company, object>(x=>x.Name)">Company Name</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<Company, object>(x=>x.Description)">Description</MudTableSortLabel></MudTh>
                 <MudTh>Actions</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Nr">@context.Id</MudTd>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Logo">
+                    <img src="@ConvertImageToDisplay(context.ImgUrl)" style="width:50px;height:50px;" />
+                </MudTd>
+                <MudTd DataLabel="Name">
+                    @{
+                            companyId = "/menuadd/" + context.Id.ToString();
+                    }
+                    <MudLink Href=@companyId Underline="Underline.Always">@context.Name</MudLink>
+                </MudTd>
                 <MudTd DataLabel="Description">@context.Description</MudTd>
-                <MudTd DataLabel="Molar mass"><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Medium" Class="ma-2"></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" Class="ma-2"></MudIconButton></MudTd>
+                <MudTd DataLabel="Action">
+                    <MudIconButton Tag="@context.Id" Icon="@Icons.Material.Filled.Edit" OnClick="OpenEditDialog" Size="Size.Medium" Class="ma-2"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="DeleteCompanyHandler" Size="Size.Medium" Class="ma-2"></MudIconButton>
+                </MudTd>
             </RowTemplate>
-            @*<RowEditingTemplate>
-                    <MudTd DataLabel="Nr">@context.Number</MudTd>
-                    <MudTd DataLabel="Sign">
-                        <MudTextField @bind-Value="@context.Sign" Required />
-                    </MudTd>
-                    <MudTd DataLabel="Name">
-                        <MudTextField @bind-Value="@context.Name" Required />
-                    </MudTd>
-                    <MudTd DataLabel="Position">
-                        <MudTextField @bind-Value="@context.Position" Required />
-                    </MudTd>
-                    <MudTd DataLabel="Molar mass">
-                        <MudTextField @bind-Value="@context.Molar" Required />
-                    </MudTd>
-                </RowEditingTemplate>*@
             <PagerContent>
                 <MudTablePager />
             </PagerContent>
         </MudTable>
-        @*<MudSwitch @bind-Checked="@hover" Color="Color.Primary">Hover</MudSwitch>
-        <MudSwitch @bind-Checked="@dense" Color="Color.Secondary">Dense</MudSwitch>
-        <MudSwitch @bind-Checked="@ronly" Color="Color.Tertiary">Read Only</MudSwitch>
-        <MudText Inline="true">Selected: @selectedItem?.Name</MudText>*@
-
-
-        <MudDialog @bind-IsVisible="visible">
-            <TitleContent>
+    }
+    <MudDialog @bind-IsVisible="dialogBoxVisible">
+        <TitleContent>
+            @if (selectedItem == null)
+            {
                 <MudText Typo="Typo.h6">
                     Add Company
                 </MudText>
-            </TitleContent>
-            <DialogContent>
-                        <MudGrid>
-                            <MudItem xs="12">
-                                <div class=" mt-4">
-                                    <div class="d-inline">
 
-                                        @*<BlazorInputFile.InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />*@
-                                        <MudButton HtmlTag="label"
-                                                   Variant="Variant.Filled"
-                                                   Color="Color.Primary"
-                                                   StartIcon="@Icons.Filled.Image"
-                                                   for="fileInput">
-                                            Upload Logo
-                                        </MudButton>
-                                    </div>
-                                    <div class="d-inline pa-2"><input type="file" id="fileInput" name="fileInput" hidden></div>
-                                </div>
-                            </MudItem>
-                            <MudItem xs="12">
-                                <MudTextField T="string" Label="Company Name" Required="true" RequiredError="Company Name is required!" />
-                            </MudItem>
-                            <MudItem xs="12">
-                                <MudTextField T="string" Label="Company Moto" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
-                            </MudItem>
-                        </MudGrid>
-                    
-            </DialogContent>
-            <DialogActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Save</MudButton>
-            </DialogActions>
-            
-        </MudDialog>
+            }
+            else
+            {
+                <MudText Typo="Typo.h6">
+                    Update Company
+                </MudText>
+            }
+        </TitleContent>
+        <DialogContent>
+            <EditForm Model="companyDetailViewModel" OnValidSubmit="AddNewCompanyHandler">
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <div class=" mt-4">
+                            <div class="d-inline">
+                                <MudButton HtmlTag="label"
+                                           Variant="Variant.Filled"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Filled.Image"
+                                           for="fileInput">
+                                    Upload Logo
+                                </MudButton>
+                            </div>
+                            <div class="d-inline pa-2">
+                                <InputFile id="fileInput" OnChange="HandleSelection" hidden />
+                                <p>@status</p>
+                            </div>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        @if (imageUploaded != null)
+                        {
+                            <img src="@ConvertImageToDisplay(imageUploaded)" style="width:80px;height:80px;border:1px solid black;" />
+                        }
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField T="string" Label="Company Name" @bind-Value="@companyDetailViewModel.Name" Required="true" RequiredError="Company Name is required!" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField T="string" Label="Company Moto" @bind-Value="@companyDetailViewModel.Description" Required="true" RequiredError="Company Moto is required!" Variant="Variant.Text" Lines="5" />
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </DialogContent>
+        <DialogActions>
+            @if (selectedItem == null)
+            {
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" OnClick="AddNewCompanyHandler" Color="Color.Primary" Class="px-10">Save</MudButton>
+                <MudButton Variant="Variant.Filled" OnClick="ResetForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" OnClick="UpdateCompanyHandler" Color="Color.Primary" Class="px-10">Update</MudButton>
+                <MudButton Variant="Variant.Filled" OnClick="ResetForm" Color="Color.Primary" Class="px-10">Clear</MudButton>
+            }
+        </DialogActions>
 
-    </MudContainer>
-}
-
+    </MudDialog>
+</MudContainer>
 
 @code {
-    private List<Company> Companies = new List<Company>()
-    {
-        new Company(){ Id = 1, Name="Company A",Description="Company A Description"},
-                new Company(){ Id = 2, Name="Company B",Description="Company B Description"},
-                new Company(){ Id = 3, Name="Company c",Description="Company C Description"},
-                new Company(){ Id = 4, Name="Company d",Description="Company D Description"}
-    };
+
+    [Parameter]
+    public string UserId { get; set; }
+
+    [CascadingParameter]
+    public AdminLayout Layout { get; set; }
+
+    private List<Company> Companies { get; set; } = new List<Company>();
+    private CompanyViewModel addCompany { get; set; } = new CompanyViewModel();
+
     private bool dense = false;
     private bool hover = true;
     private bool ronly = false;
     private string searchString = "";
     private Company selectedItem = null;
+    private string companyId { get; set; }
+    private IFileListEntry file { get; set; }
+
+    string status;
+    public byte[] imageUploaded { get; set; }
+    private CompanyDetailViewModel companyDetailViewModel { get; set; } = new CompanyDetailViewModel();
+
 
     // Dialog Box
-    private bool visible;
-    private int rating;
+    private bool dialogBoxVisible;
     private void OpenDialog()
     {
-        visible = true;
+        status = "";
+        file = null;
+        imageUploaded = null;
+        companyDetailViewModel.Name = null;
+        companyDetailViewModel.Description = null;
+        selectedItem = null;
+        companyDetailViewModel = new CompanyDetailViewModel();
+        dialogBoxVisible = true;
     }
-    void Submit() => visible = false;
+    private void ResetForm()
+    {
+        status = "";
+        file = null;
+        imageUploaded = null;
+        companyDetailViewModel.Name = null;
+        companyDetailViewModel.Description = null;
+        selectedItem = null;
+        companyDetailViewModel = new CompanyDetailViewModel();
+    }
+    private async Task OpenEditDialog()
+    {
+        if (selectedItem != null)
+        {
+            var result = await companyService.GetCompaniesById(selectedItem.Id);
+            companyDetailViewModel = new CompanyDetailViewModel();
+            companyDetailViewModel.Name = result.Name;
+            companyDetailViewModel.Description = result.Description;
+            imageUploaded= result.ImgUrl;
+            dialogBoxVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+        Layout.Uid = UserId;
+        myService.CallRequestRefresh();
 
-    
+    }
     private bool FilterFunc(Company company)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
         if (company.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        //if ($"{element.Number} {element.Position} {element.Molar}".Contains(searchString))
-        //    return true;
         return false;
+    }
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        imageUploaded = null;
+        file = files.FirstOrDefault();
+        if (file != null)
+        {
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            status = $"Finished loading {file.Size} bytes from {file.Name}";
+            imageUploaded = ms.ToArray();
+        }
+
+    }
+    private async void UpdateCompanyHandler()
+    {
+        companyDetailViewModel.UserId = long.Parse(UserId);
+
+        companyDetailViewModel.Photo = imageUploaded;
+        var res = (await companyService.UpdateCompany(companyDetailViewModel, selectedItem.Id));
+
+        //dialogBoxVisible = false;
+        Snackbar.Add("Company Updated successfully");
+        Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+    }
+    private async void AddNewCompanyHandler()
+    {
+        companyDetailViewModel.UserId = long.Parse(UserId);
+        companyDetailViewModel.Photo = imageUploaded;
+        var res = (await companyService.AddNewCompany(companyDetailViewModel, UserId));
+        //dialogBoxVisible = false;
+        Snackbar.Add("Company added successfully");
+        Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+
+    }
+    private string ConvertImageToDisplay(byte[] image)
+    {
+        if (image != null)
+        {
+            var base64 = Convert.ToBase64String(image);
+            var fs = string.Format("data:image/jgp;base64,{0}", base64);
+            return fs;
+        }
+        return "";
+    }
+
+    public async Task DeleteCompanyHandler()
+    {
+        if (selectedItem != null)
+        {
+            await companyService.DeleteCompany(selectedItem.Id);
+            Snackbar.Add("Record Deleted");
+            Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
     }
 }

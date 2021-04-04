@@ -1,4 +1,5 @@
 ﻿<StaticWebAssets Version="1.0">
   <ContentRoot BasePath="/" Path="D:\new project\MyMenu\Client\bin\Debug\netstandard2.1\wwwroot\" />
+  <ContentRoot BasePath="_content/BlazorInputFile" Path="C:\Users\haris\.nuget\packages\blazorinputfile\0.2.0\build\..\staticwebassets\" />
   <ContentRoot BasePath="_content/MudBlazor" Path="C:\Users\haris\.nuget\packages\mudblazor\2.0.6\build\..\staticwebassets\" />
 </StaticWebAssets>

@@ -4,11 +4,13 @@ using MyMenu.Shared.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyMenu.Server.Repository.Discount
 {
-    public class DiscountRepository:IDiscountRepository
+    public class DiscountRepository : IDiscountRepository
     {
 
         private MyMenuDbContext context;
@@ -16,74 +18,31 @@ namespace MyMenu.Server.Repository.Discount
         {
             this.context = context;
         }
-        public async Task<object> AddUpdateDiscount(DiscountViewModel itemViewModel, string UserName)
+
+        public async Task DeleteDiscount(int id)
         {
-
-            if (itemViewModel.Id == 0)
+            var result = await context.DiscountPeriods.FirstOrDefaultAsync(e => e.Id == id);
+            var discountTransaction = await context.DiscountTransaction.Where(x => x.DiscountPeriodId == id).ToListAsync();
+            var item = await context.Item.Where(x => x.DiscountId == id).ToListAsync();
+            if (discountTransaction != null)
             {
-                DiscountPeriods item = new DiscountPeriods();
-                item.ItemId = itemViewModel.ItemId;
-                item.FromDate = itemViewModel.FromDate;
-                item.ToDate = itemViewModel.ToDate;
-                item.FromTime = itemViewModel.FromTime;
-                item.ToTime = itemViewModel.ToTime;
-                item.CreatedAt = DateTime.Now;
-                item.UpdatedAt = DateTime.Now;
-                item.IsActive = true;
-                item.IsDelete = false;
-                context.DiscountPeriods.Add(item);
+                context.DiscountTransaction.RemoveRange(discountTransaction);
                 await context.SaveChangesAsync();
-                foreach (var day in itemViewModel.daysOfWeek.Where(x=>x.IsChecked==true))
-                {
-                    DiscountTransaction transaction = new DiscountTransaction();
-                    transaction.DiscountPeriodId = item.Id;
-                    transaction.DayId = day.Id;
-                }
-                await context.SaveChangesAsync();
-                return item;
-
             }
-            else
-            {
-                var item = await context.DiscountPeriods.FindAsync(itemViewModel.Id);
-                item.ItemId = itemViewModel.ItemId;
-                item.FromDate = itemViewModel.FromDate;
-                item.ToDate = itemViewModel.ToDate;
-                item.FromTime = itemViewModel.FromTime;
-                item.ToTime = itemViewModel.ToTime;
-                item.CreatedAt = DateTime.Now;
-                item.UpdatedAt = DateTime.Now;
-                item.IsActive = itemViewModel.IsActive;
-                context.DiscountPeriods.Update(item);
-                await context.SaveChangesAsync();
-                var DaysOff = await context.DiscountTransaction.Where(x => x.DiscountPeriodId == itemViewModel.Id).ToListAsync();
-                foreach (var day in DaysOff)
-                {
-                    context.DiscountTransaction.Remove(day);
-                    await context.SaveChangesAsync();
-                }
-                foreach (var day in itemViewModel.daysOfWeek.Where(x => x.IsChecked == true))
-                {
-                    DiscountTransaction transaction = new DiscountTransaction();
-                    transaction.DiscountPeriodId = item.Id;
-                    transaction.DayId = day.Id;
-                    await context.SaveChangesAsync();
-                }
-                return item;
-            }
-        }
-
-        public async Task<object> DeleteDiscount(int Id)
-        {
-            var item = await context.DiscountPeriods.FindAsync(Id);
             if (item != null)
             {
-                item.IsDelete = true;
-                item.IsActive = false;
-                context.DiscountPeriods.Update(item);
-                return true;
+                foreach(var i in item)
+                {
+                    i.DiscountId= 0;
+                    context.Entry(i).Property("DiscountId").IsModified = true;
+                    context.SaveChanges();
+                }
             }
-            return false;
+            if (result != null)
+                {
+                    context.DiscountPeriods.Remove(result);
+                    await context.SaveChangesAsync();
+                }
         }
 
         public async Task<object> GetDiscountById(int Id)
@@ -112,6 +71,72 @@ namespace MyMenu.Server.Repository.Discount
                 return itemList;
             }
             return false;
+        }
+
+        public async Task<IEnumerable<DiscountPeriods>> GetAllDiscountByCompanyId(string companyid)
+        {
+            return await context.DiscountPeriods.Where(x => x.CompanyId == int.Parse(companyid)).ToListAsync();
+        }
+
+        public async Task AddDiscount(DiscountViewModel newdiscount)
+        {
+            DiscountPeriods item = new DiscountPeriods();
+            item.ItemId = newdiscount.ItemId;
+            item.FromDate = newdiscount.FromDate;
+            item.CompanyId = newdiscount.CompanyId;
+            item.Name = newdiscount.Name;
+            item.ToDate = newdiscount.ToDate;
+            item.FromTime = newdiscount.FromTime;
+            item.ToTime = newdiscount.ToTime;
+            item.CreatedAt = DateTime.Now;
+            item.UpdatedAt = DateTime.Now;
+            item.IsActive = true;
+            item.IsDelete = false;
+            await context.DiscountPeriods.AddAsync(item);
+            await context.SaveChangesAsync();
+            foreach (var list in newdiscount.DaysIdList)
+            {
+                DiscountTransaction transaction = new DiscountTransaction();
+                transaction.DiscountPeriodId = item.Id;
+                transaction.DayId = list;
+                await context.DiscountTransaction.AddAsync(transaction);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<DiscountTransaction>> GetDiscountTransactionByDiscountId(int discountid)
+        {
+            return await context.DiscountTransaction.Where(x => x.DiscountPeriodId == discountid).ToListAsync();
+        }
+
+        public async Task UpdateDiscount(DiscountViewModel newdiscount, int id)
+        {
+            var result = await context.DiscountPeriods.Include(x=>x.DiscountTransaction)
+               .FirstOrDefaultAsync(e => e.Id == id);
+            if (result != null)
+            {
+                var discountTransaction = await context.DiscountTransaction.Where(x => x.DiscountPeriodId == id).ToListAsync();
+                if (discountTransaction != null)
+                {
+                    context.DiscountTransaction.RemoveRange(discountTransaction);
+                    await context.SaveChangesAsync();
+                    foreach (var list in newdiscount.DaysIdList)
+                    {
+                        DiscountTransaction transaction = new DiscountTransaction();
+                        transaction.DiscountPeriodId = result.Id;
+                        transaction.DayId = list;
+                        await context.DiscountTransaction.AddAsync(transaction);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                result.FromDate = newdiscount.FromDate;
+                result.Name = newdiscount.Name;
+                result.ToDate = newdiscount.ToDate;
+                result.FromTime = newdiscount.FromTime;
+                result.ToTime = newdiscount.ToTime;
+                context.DiscountPeriods.Update(result);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

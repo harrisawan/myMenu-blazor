@@ -1,4 +1,5 @@
-﻿using MyMenu.Shared.ViewModels;
+﻿using MyMenu.Shared.Models;
+using MyMenu.Shared.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,11 @@ namespace MyMenu.Server.Repository.Discount
     {
         Task<object> GetAllDiscount();
         Task<object> GetDiscountByItemId(int id);
-        Task<object> AddUpdateDiscount(DiscountViewModel discount, string UserName);
-        Task<object> DeleteDiscount(int Id);
+        Task<object> GetDiscountById(int id);
+        Task DeleteDiscount(int Id);
+        Task<IEnumerable<DiscountPeriods>> GetAllDiscountByCompanyId(string companyid);
+        Task<IEnumerable<DiscountTransaction>> GetDiscountTransactionByDiscountId(int discountid);
+        Task AddDiscount(DiscountViewModel newdiscount);
+        Task UpdateDiscount(DiscountViewModel newdiscount, int id);
     }
 }

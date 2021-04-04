@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MyMenu.Shared.Models
 {
-    public partial class DaysOfWeek
+    public class DaysOfWeek
     {
         public DaysOfWeek()
         {

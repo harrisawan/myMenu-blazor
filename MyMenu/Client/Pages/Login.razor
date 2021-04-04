@@ -1,5 +1,8 @@
 ﻿@page "/login"
 @layout LoginLayout
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
 <link href="css/responsive-full-background-image.css" rel="stylesheet" />
 @*<MudProgressCircular Color="Color.Primary" Indeterminate="@isLoading" />*@
 <div class="container">
@@ -8,32 +11,41 @@
             <div class="" mx-2" Elevation="0"></div>
             <MudPaper Class="d-flex mx-2 mud-elevation-22">
                 <div id="loginformsize" style="width:380px;">
-                    <MudCard Elevation="0" Class="py-2">
-                        <MudCardContent>
-                            <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Primary"><b>Login</b></MudText>
-                            @foreach (var error in errors)
-                            {
-                                <MudAlert Severity="Severity.Error" NoIcon="false">@error</MudAlert>
-                            }
-                            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-                                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
-                                              Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
-                                <MudTextField T="string" Label="Password" @ref="pwField1"
-                                              InputType="InputType.Password"
-                                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
-                                              RequiredError="Password is required!" />
-                            </MudForm>
-                            <MudText Align="Align.Right"><MudLink Href="/register" Underline="Underline.Hover">Forgot Password?</MudLink></MudText>
-                        </MudCardContent>
-                        <MudCardActions>
-                            <MudButton Link="/adminHome" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mr-3">Login</MudButton>
-                        </MudCardActions>
-                        <MudText Class="px-2 pb-2" Align="Align.Center"> New User? <MudLink Href="/register" Underline="Underline.Always"><b>Create an account</b></MudLink></MudText>
-                    </MudCard>
+                    <EditForm Model="@loginViewModel" OnValidSubmit="HandleLogin">
+                        <MudCard Elevation="0" Class="py-2">
+                            <MudCardContent>
+                                <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-2" Color="Color.Primary"><b>Login</b></MudText>
+                                @if (ShowErrors == true)
+                                {
+                                    <MudAlert Severity="Severity.Error" NoIcon="false">@Error</MudAlert>
+                                }
+                                @if (success)
+                                {
+                                    <MudText Color="Color.Success">Success</MudText>
+                                }
+                                else
+                                {
+                                    <MudText Color="@Color.Error">
+                                        <ValidationSummary />
+                                    </MudText>
+                                }
+                                <DataAnnotationsValidator />
+                                
+                                        <MudTextField Label="Email" Class="mt-3"
+                                                      @bind-Value="loginViewModel.Email" For="@(() => loginViewModel.Email)" />
+                                        <MudTextField Label="Password" Class="mt-3"
+                                                      @bind-Value="loginViewModel.Password" For="@(() => loginViewModel.Password)" InputType="InputType.Password" />
+                                     
+                                    </MudCardContent>
+                            <MudCardActions>
+                                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                            </MudCardActions>
+                            <MudText Class="px-2 pb-2" Align="Align.Center"> New User? <MudLink Href="/register" Underline="Underline.Always"><b>Create an account</b></MudLink></MudText>
+                        </MudCard>
+                    </EditForm>
                 </div>
-
             </MudPaper>
-            <div class="" mx-2" Elevation="0"></div>
+            <div class="mx-2" Elevation="0"></div>
         </div>
     </div>
 </div>
@@ -41,23 +53,24 @@
 @code {
     bool success;
     string[] errors = { };
-    MudTextField<string> pwField1;
-    MudForm form;
-    private IEnumerable<string> PasswordStrength(string pw)
+    private bool ShowErrors;
+    private string Error = "";
+    LoginViewModel loginViewModel = new LoginViewModel();
+    private async Task HandleLogin()
     {
-        if (string.IsNullOrWhiteSpace(pw))
+        ShowErrors = false;
+
+        var result = await AuthService.Login(loginViewModel);
+
+        if (result.Successful)
         {
-            yield return "Password is required!";
-            yield break;
+            NavigationManager.NavigateTo($"/adminhome/{result.UserId}", forceLoad: true);
         }
-        if (pw.Length < 8)
-            yield return "Password must be at least of length 8";
-        if (!Regex.IsMatch(pw, @"[A-Z]"))
-            yield return "Password must contain at least one capital letter";
-        if (!Regex.IsMatch(pw, @"[a-z]"))
-            yield return "Password must contain at least one lowercase letter";
-        if (!Regex.IsMatch(pw, @"[0-9]"))
-            yield return "Password must contain at least one digit";
+        else
+        {
+            Error = result.Error;
+            ShowErrors = true;
+        }
     }
 
 }

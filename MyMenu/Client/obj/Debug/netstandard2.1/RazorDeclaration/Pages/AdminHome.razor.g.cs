@@ -76,35 +76,126 @@ using MyMenu.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 10 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Companies;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 11 "D:\new project\MyMenu\Client\_Imports.razor"
-using MudBlazor;
+using MyMenu.Client.Services.Menus;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 12 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.Text.RegularExpressions;
+using MyMenu.Client.Services.Categories;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 13 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.ComponentModel.DataAnnotations;
+using MyMenu.Client.Services.Items;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 14 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Discounts;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "D:\new project\MyMenu\Client\_Imports.razor"
+using MudBlazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 17 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.Text.RegularExpressions;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 18 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.IO;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 20 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Shared.ViewModels;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 21 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Auth;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 22 "D:\new project\MyMenu\Client\_Imports.razor"
 using MyMenu.Shared.Models;
 
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 23 "D:\new project\MyMenu\Client\_Imports.razor"
+using Microsoft.AspNetCore.Components.Authorization;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 24 "D:\new project\MyMenu\Client\_Imports.razor"
+using Blazored.LocalStorage;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 25 "D:\new project\MyMenu\Client\_Imports.razor"
+using BlazorInputFile;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 7 "D:\new project\MyMenu\Client\Pages\AdminHome.razor"
+using MudBlazor.Services;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.LayoutAttribute(typeof(AdminLayout))]
-    [Microsoft.AspNetCore.Components.RouteAttribute("/adminHome")]
+    [Microsoft.AspNetCore.Components.RouteAttribute("/adminhome/{userid}")]
     public partial class AdminHome : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
@@ -113,46 +204,150 @@ using MyMenu.Shared.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 109 "D:\new project\MyMenu\Client\Pages\AdminHome.razor"
+#line 132 "D:\new project\MyMenu\Client\Pages\AdminHome.razor"
        
-    private List<Company> Companies = new List<Company>()
-    {
-        new Company(){ Id = 1, Name="Company A",Description="Company A Description"},
-                new Company(){ Id = 2, Name="Company B",Description="Company B Description"},
-                new Company(){ Id = 3, Name="Company c",Description="Company C Description"},
-                new Company(){ Id = 4, Name="Company d",Description="Company D Description"}
-    };
+
+    [Parameter]
+    public string UserId { get; set; }
+
+    [CascadingParameter]
+    public AdminLayout Layout { get; set; }
+
+    private List<Company> Companies { get; set; } = new List<Company>();
+    private CompanyViewModel addCompany { get; set; } = new CompanyViewModel();
+
     private bool dense = false;
     private bool hover = true;
     private bool ronly = false;
     private string searchString = "";
     private Company selectedItem = null;
+    private string companyId { get; set; }
+    private IFileListEntry file { get; set; }
+
+    string status;
+    public byte[] imageUploaded { get; set; }
+    private CompanyDetailViewModel companyDetailViewModel { get; set; } = new CompanyDetailViewModel();
+
 
     // Dialog Box
-    private bool visible;
-    private int rating;
+    private bool dialogBoxVisible;
     private void OpenDialog()
     {
-        visible = true;
+        status = "";
+        file = null;
+        imageUploaded = null;
+        companyDetailViewModel.Name = null;
+        companyDetailViewModel.Description = null;
+        selectedItem = null;
+        companyDetailViewModel = new CompanyDetailViewModel();
+        dialogBoxVisible = true;
     }
-    void Submit() => visible = false;
+    private void ResetForm()
+    {
+        status = "";
+        file = null;
+        imageUploaded = null;
+        companyDetailViewModel.Name = null;
+        companyDetailViewModel.Description = null;
+        selectedItem = null;
+        companyDetailViewModel = new CompanyDetailViewModel();
+    }
+    private async Task OpenEditDialog()
+    {
+        if (selectedItem != null)
+        {
+            var result = await companyService.GetCompaniesById(selectedItem.Id);
+            companyDetailViewModel = new CompanyDetailViewModel();
+            companyDetailViewModel.Name = result.Name;
+            companyDetailViewModel.Description = result.Description;
+            imageUploaded= result.ImgUrl;
+            dialogBoxVisible = true;
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+        Layout.Uid = UserId;
+        myService.CallRequestRefresh();
 
-    
+    }
     private bool FilterFunc(Company company)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
         if (company.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        //if ($"{element.Number} {element.Position} {element.Molar}".Contains(searchString))
-        //    return true;
         return false;
+    }
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        imageUploaded = null;
+        file = files.FirstOrDefault();
+        if (file != null)
+        {
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            status = $"Finished loading {file.Size} bytes from {file.Name}";
+            imageUploaded = ms.ToArray();
+        }
+
+    }
+    private async void UpdateCompanyHandler()
+    {
+        companyDetailViewModel.UserId = long.Parse(UserId);
+
+        companyDetailViewModel.Photo = imageUploaded;
+        var res = (await companyService.UpdateCompany(companyDetailViewModel, selectedItem.Id));
+
+        //dialogBoxVisible = false;
+        Snackbar.Add("Company Updated successfully");
+        Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+    }
+    private async void AddNewCompanyHandler()
+    {
+        companyDetailViewModel.UserId = long.Parse(UserId);
+        companyDetailViewModel.Photo = imageUploaded;
+        var res = (await companyService.AddNewCompany(companyDetailViewModel, UserId));
+        //dialogBoxVisible = false;
+        Snackbar.Add("Company added successfully");
+        Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+
+    }
+    private string ConvertImageToDisplay(byte[] image)
+    {
+        if (image != null)
+        {
+            var base64 = Convert.ToBase64String(image);
+            var fs = string.Format("data:image/jgp;base64,{0}", base64);
+            return fs;
+        }
+        return "";
+    }
+
+    public async Task DeleteCompanyHandler()
+    {
+        if (selectedItem != null)
+        {
+            await companyService.DeleteCompany(selectedItem.Id);
+            Snackbar.Add("Record Deleted");
+            Companies = (await companyService.GetAllCompaniesByUserId(UserId)).ToList();
+        }
+        else
+        {
+            Snackbar.Add("Firstly! Click On Desired Row");
+        }
     }
 
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IMyService myService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private ICompanyService companyService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IDialogService Dialog { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private ISnackbar Snackbar { get; set; }
     }

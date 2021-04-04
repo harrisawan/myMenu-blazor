@@ -3,7 +3,7 @@
 */
 body {
     /* Location of the image */
-    background-image: url(../images/photobg1.jpg);
+    background-image: url(../images/photobg.jpg);
     /* Image is centered vertically and horizontally at all times */
     background-position: center center;
     /* Image doesn't repeat */
@@ -25,7 +25,7 @@ body {
     body {
         /* The file size of this background image is 93% smaller
      * to improve page load speed on mobile internet connections */
-        background-image: url(../images/photobg2.jpg);
+        background-image: url(../images/photobg.jpg);
     }
 	}
 @media only screen and (max-width: 450px) {

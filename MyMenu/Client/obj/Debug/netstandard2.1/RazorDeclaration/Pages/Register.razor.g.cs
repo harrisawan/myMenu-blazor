@@ -76,29 +76,113 @@ using MyMenu.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 10 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Companies;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 11 "D:\new project\MyMenu\Client\_Imports.razor"
-using MudBlazor;
+using MyMenu.Client.Services.Menus;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 12 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.Text.RegularExpressions;
+using MyMenu.Client.Services.Categories;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 13 "D:\new project\MyMenu\Client\_Imports.razor"
-using System.ComponentModel.DataAnnotations;
+using MyMenu.Client.Services.Items;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 14 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Discounts;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "D:\new project\MyMenu\Client\_Imports.razor"
+using MudBlazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 17 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.Text.RegularExpressions;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 18 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.ComponentModel.DataAnnotations;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "D:\new project\MyMenu\Client\_Imports.razor"
+using System.IO;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 20 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Shared.ViewModels;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 21 "D:\new project\MyMenu\Client\_Imports.razor"
+using MyMenu.Client.Services.Auth;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 22 "D:\new project\MyMenu\Client\_Imports.razor"
 using MyMenu.Shared.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 23 "D:\new project\MyMenu\Client\_Imports.razor"
+using Microsoft.AspNetCore.Components.Authorization;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 24 "D:\new project\MyMenu\Client\_Imports.razor"
+using Blazored.LocalStorage;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 25 "D:\new project\MyMenu\Client\_Imports.razor"
+using BlazorInputFile;
 
 #line default
 #line hidden
@@ -113,9 +197,8 @@ using MyMenu.Shared.Models;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 49 "D:\new project\MyMenu\Client\Pages\Register.razor"
+#line 83 "D:\new project\MyMenu\Client\Pages\Register.razor"
        
-
 
     bool success;
     string[] errors = { };
@@ -145,11 +228,31 @@ using MyMenu.Shared.Models;
             return "Passwords don't match";
         return null;
     }
+    RegisterViewModel registerViewModel = new RegisterViewModel();
+    private bool ShowErrors;
+    private string Errors;
+    private async Task HandleRegistration()
+    {
+        ShowErrors = false;
 
+        var result = await authService.Register(registerViewModel);
+
+        if (result.Successful)
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            Errors = result.Errors;
+            ShowErrors = true;
+        }
+    }
 
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IAuthService authService { get; set; }
     }
 }
 #pragma warning restore 1591

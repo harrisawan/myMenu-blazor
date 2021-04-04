@@ -9,9 +9,11 @@ namespace MyMenu.Server.Repository.Item
     public interface IItemRepository
     {
         Task<object> GetAllItem();
-        Task<object> GetItemById(int id);
-        Task<object> AddUpdateItem(ItemViewModel Conditions, string UserName);
-        Task<object> DeleteItem(int Id);
         Task<object> GetItemByCategoryId(int Id);
+        Task<IEnumerable<MyMenu.Shared.Models.Item>> GetAllItemByCompanyId(string companyid);
+        Task AddItem(ItemViewModel newitem);
+        Task<object> GetItemById(long id);
+        Task DeleteItem(long id);
+        Task UpdateItem(ItemViewModel newitem, long id);
     }
 }
